@@ -111,8 +111,20 @@ footer { color: var(--muted); font-size: .8125rem; margin-top: 2rem;
 code { background: var(--badge); padding: .1rem .3rem; border-radius: .2rem; }
 #sync {
   font-size: .8125rem; color: var(--muted); margin-bottom: 1rem; min-height: 1.2em;
+  display: flex; flex-wrap: wrap; gap: .5rem; align-items: center;
 }
 #sync.bad { color: var(--stale); }
+#sync input {
+  background: var(--bg); color: var(--fg); border: 1px solid var(--line);
+  border-radius: .35rem; padding: .35rem .5rem; font-size: .8125rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace; min-width: 22rem;
+  max-width: 100%;
+}
+#sync button {
+  background: var(--accent); color: #fff; border: 0; border-radius: .35rem;
+  padding: .4rem .8rem; font-size: .8125rem; cursor: pointer;
+}
+#sync a { color: var(--accent); cursor: pointer; text-decoration: underline; }
 """
 
 JS_CORE = """
@@ -176,17 +188,51 @@ function setCardStatus(card, status) {
     b.setAttribute('aria-pressed', String(b.dataset.set === status)));
 }
 
-function getKey(force) {
-  let k = localStorage.getItem('board_key');
-  if (!k || force) {
-    k = window.prompt('Board key (set as BOARD_KEY in Vercel):') || '';
-    if (k) localStorage.setItem('board_key', k.trim());
-  }
-  return (k || '').trim();
+function storedKey() {
+  return (localStorage.getItem('board_key') || '').trim();
+}
+
+function showKeyForm(message) {
+  sync.className = 'bad';
+  sync.innerHTML = '';
+  const label = document.createElement('span');
+  label.textContent = message || 'Enter your board key to sync marks across devices:';
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.placeholder = 'board key';
+  input.autocapitalize = 'off';
+  input.autocomplete = 'off';
+  input.spellcheck = false;
+  const save = document.createElement('button');
+  save.textContent = 'Save';
+  const submit = () => {
+    const v = input.value.trim();
+    if (!v) { input.focus(); return; }
+    localStorage.setItem('board_key', v);
+    loadStatuses();
+  };
+  save.addEventListener('click', submit);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
+  sync.append(label, input, save);
+  input.focus();
+}
+
+function showSynced(text) {
+  sync.className = '';
+  sync.innerHTML = '';
+  const msg = document.createElement('span');
+  msg.textContent = text;
+  const change = document.createElement('a');
+  change.textContent = 'change key';
+  change.addEventListener('click', () => {
+    localStorage.removeItem('board_key');
+    showKeyForm('Enter your board key:');
+  });
+  sync.append(msg, change);
 }
 
 async function api(method, body) {
-  const key = getKey(false);
+  const key = storedKey();
   if (!key) throw new Error('no key');
   const resp = await fetch(API, {
     method,
@@ -199,6 +245,7 @@ async function api(method, body) {
 }
 
 async function loadStatuses() {
+  if (!storedKey()) { showKeyForm(); render(); return; }
   sync.className = ''; sync.textContent = 'Syncing statuses...';
   try {
     const data = await api('GET');
@@ -206,10 +253,15 @@ async function loadStatuses() {
       setCardStatus(card, data[card.dataset.ref] || 'new');
     });
     render();
-    sync.textContent = 'Synced. Marks are shared across your devices.';
+    showSynced('Synced - marks are shared across your devices.');
   } catch (err) {
-    sync.className = 'bad';
-    sync.textContent = 'Not synced (' + err.message + '). Marks below are from the last run.';
+    if (err.message === 'key rejected') {
+      showKeyForm('That key was rejected. Try again:');
+    } else {
+      sync.className = 'bad';
+      sync.textContent = 'Not synced (' + err.message + '). Marks below are from the last run.';
+    }
+    render();
   }
 }
 
@@ -227,7 +279,8 @@ list.addEventListener('click', async (ev) => {
   } catch (err) {
     setCardStatus(card, prev);        // roll back so the page never lies
     counts();
-    sync.className = 'bad'; sync.textContent = 'Could not save (' + err.message + ').';
+    if (err.message === 'key rejected') showKeyForm('That key was rejected. Try again:');
+    else { sync.className = 'bad'; sync.textContent = 'Could not save (' + err.message + ').'; }
   }
 });
 
