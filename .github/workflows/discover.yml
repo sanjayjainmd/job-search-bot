@@ -97,10 +97,13 @@ jobs:
             /tmp/board
           # index.html so the bare Pages URL works with no path.
           cp board.html /tmp/board/index.html
+          # .nojekyll serves the file verbatim. Without it Jekyll processes the
+          # page and would break on any Liquid-looking braces in the CSS or JS.
+          touch /tmp/board/.nojekyll
           cd /tmp/board
           git config user.name "job-search-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html
+          git add index.html .nojekyll
           if git diff --staged --quiet; then
             echo "Board unchanged."
           else
