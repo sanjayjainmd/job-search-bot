@@ -6,6 +6,7 @@ titles are demoted into a "Worth a look" section instead of being deleted.
 """
 from __future__ import annotations
 
+import os
 import re
 from typing import Callable, List, Tuple
 
@@ -76,6 +77,12 @@ def run(runner: str, sources: List[Source]) -> int:
     """Collect, classify, dedup, score, deliver. Returns the count sent."""
     db.init_db()
     print(f"\n=== {runner} run ===")
+
+    # If the cloud cache failed to restore, the database is empty and every
+    # job looks new. Say so in the digest rather than letting it read as a
+    # flood of duplicates with no explanation.
+    state_lost = (db.is_empty()
+                  and os.getenv("STATE_RESTORED", "").lower() == "false")
 
     collected: List[Job] = []
     stats: dict[str, int] = {}
@@ -155,6 +162,12 @@ def run(runner: str, sources: List[Source]) -> int:
     to_send = primary + stretch
 
     warnings = canary.check(stats)
+    if state_lost:
+        warnings.append(
+            "Saved state was not restored (cache miss), so every job looks new. "
+            "Expect this one digest to repeat things you have already seen; the "
+            "next run will be back to new postings only."
+        )
     if held_for_later:
         warnings.append(
             f"{len(held_for_later)} more matched but were held back by the "

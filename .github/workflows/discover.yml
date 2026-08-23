@@ -32,6 +32,7 @@ jobs:
       # newest previous one. Caches are evicted after 7 days unused, which a
       # daily schedule comfortably avoids.
       - name: Restore job database
+        id: state
         uses: actions/cache@v4
         with:
           path: jobs.db
@@ -51,4 +52,11 @@ jobs:
           LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
           LLM_MODEL: ${{ secrets.LLM_MODEL }}
           DRY_RUN: "false"
+          # Lets the run tell you WHY a digest is full of things you have
+          # already seen, instead of it just looking broken.
+          STATE_RESTORED: ${{ steps.state.outputs.cache-hit == 'true' }}
         run: python run_discover.py
+
+      - name: Report dedup state
+        if: always()
+        run: python run_discover.py --stats

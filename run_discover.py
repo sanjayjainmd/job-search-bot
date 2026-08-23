@@ -3,12 +3,13 @@
 
     py run_discover.py            # normal run
     py run_discover.py --verify   # check which companies.yaml slugs actually work
+    py run_discover.py --stats    # is dedup working? how many new jobs per day?
 """
 from __future__ import annotations
 
 import sys
 
-from jobbot import config
+from jobbot import config, db
 from jobbot.pipeline import run
 from jobbot.sources import apify, ats, directories
 
@@ -28,9 +29,39 @@ def verify() -> int:
     return 0
 
 
+def show_stats() -> int:
+    """Answers: is it only sending new things, or repeating itself?"""
+    db.init_db()
+    s = db.stats()
+
+    print(f"Jobs remembered : {s['total']}  ({s['notified']} of them were sent)")
+    if not s["total"]:
+        print()
+        print("The database is empty, so the next run will treat every job as new.")
+        print("On GitHub Actions that means the cache did not restore.")
+        return 0
+
+    print(f"First recorded  : {s['first']}")
+    print(f"Last recorded   : {s['last']}")
+    print()
+    print("New jobs recorded per day. This is the number to watch: it should")
+    print("fall to a trickle once the initial backlog has cleared. If it stays")
+    print("high every day, dedup is not working.")
+    for day, count in s["by_day"]:
+        print(f"  {day}  {'#' * min(count, 50)} {count}")
+
+    print()
+    print("Recent source runs (postings fetched, before any filtering):")
+    for ts, runner, source, count in s["runs"]:
+        print(f"  {ts}  {runner:<9} {source:<12} {count}")
+    return 0
+
+
 def main() -> int:
     if "--verify" in sys.argv:
         return verify()
+    if "--stats" in sys.argv:
+        return show_stats()
 
     sources = [
         ("ats", lambda: ats.fetch_all(config.COMPANIES)),

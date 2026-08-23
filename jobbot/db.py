@@ -118,3 +118,33 @@ def zero_streak(source: str, limit: int = 10) -> int:
         else:
             break
     return streak
+
+
+def stats() -> dict:
+    """Everything needed to answer: is dedup actually working?"""
+    with closing(connect()) as conn:
+        total = conn.execute("SELECT COUNT(*) c FROM seen_jobs").fetchone()["c"]
+        notified = conn.execute(
+            "SELECT COUNT(*) c FROM seen_jobs WHERE notified = 1").fetchone()["c"]
+        span = conn.execute(
+            "SELECT MIN(first_seen) lo, MAX(first_seen) hi FROM seen_jobs").fetchone()
+        by_day = conn.execute(
+            "SELECT substr(first_seen,1,10) d, COUNT(*) c FROM seen_jobs"
+            " GROUP BY d ORDER BY d DESC LIMIT 14").fetchall()
+        runs = conn.execute(
+            "SELECT run_ts, runner, source, count FROM source_runs"
+            " ORDER BY id DESC LIMIT 12").fetchall()
+    return {
+        "total": total,
+        "notified": notified,
+        "first": span["lo"],
+        "last": span["hi"],
+        "by_day": [(r["d"], r["c"]) for r in by_day],
+        "runs": [(r["run_ts"], r["runner"], r["source"], r["count"]) for r in runs],
+    }
+
+
+def is_empty() -> bool:
+    """True if we have no memory of any job - i.e. everything will re-send."""
+    with closing(connect()) as conn:
+        return conn.execute("SELECT COUNT(*) c FROM seen_jobs").fetchone()["c"] == 0

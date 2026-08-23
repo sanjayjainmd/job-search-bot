@@ -124,6 +124,23 @@ blocked, and the failure would be silent.
 
 ---
 
+## Checking it is not repeating itself
+
+    .venv\Scripts\python.exe run_discover.py --stats
+
+Shows how many jobs are remembered, and a per-day histogram of newly recorded
+jobs. That histogram is the number to watch: it should fall to a trickle once
+the backlog clears. If it stays high every day, dedup is broken.
+
+Dedup works on a key of company + normalised title, so the same role collapses
+across boards, and a job is only marked seen after delivery actually succeeds.
+
+The one real way this breaks in the cloud is the Actions cache failing to
+restore, which empties the database and makes every job look new. The workflow
+passes the cache-hit result in as STATE_RESTORED, so when that happens the
+digest says so explicitly instead of just looking like a flood of duplicates.
+The Actions run also prints --stats after every run.
+
 ## The canary
 
 The dangerous failure is not a crash — it is a scraper that gets blocked and
