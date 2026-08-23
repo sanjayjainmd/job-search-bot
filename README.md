@@ -1,5 +1,9 @@
 # Job Search Bot
 
+- [OPERATIONS.md](OPERATIONS.md) - addresses, commands, tuning, troubleshooting, costs
+- [DEPLOY.md](DEPLOY.md) - one-time setup steps
+- [ADAPTING.md](ADAPTING.md) - reusing this pattern for a different subject
+
 A personal job-search bot for a **financial analyst with private equity experience**
 targeting finance roles at **AI inference / AI infrastructure** startups.
 
