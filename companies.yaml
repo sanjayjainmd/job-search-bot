@@ -10,6 +10,11 @@
 # are noted). Re-check any time with:
 #   py run_discover.py --verify
 #
+# Optional: add `size: small` or `size: large` to any entry to override the
+# automatic size guess (which uses open-role count). Size decides whether
+# senior-sounding titles like "Head of Finance" are treated as a first finance
+# hire or as a big-company executive.
+#
 # Growing this list is the highest-leverage maintenance task in the whole bot.
 
 companies:

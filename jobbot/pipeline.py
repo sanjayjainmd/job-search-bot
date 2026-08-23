@@ -18,11 +18,30 @@ def _term_in(term: str, text: str) -> bool:
     return re.search(rf"(?<!\w){re.escape(term)}(?!\w)", text) is not None
 
 
-def _title_allowed(title: str) -> bool:
-    low = (title or "").lower()
+def _is_small_company(job: Job) -> bool:
+    """Company size, judged by how many roles it currently has open."""
+    override = job.meta.get("company_size")
+    if override in ("small", "large"):
+        return override == "small"   # explicit size: in companies.yaml wins
+    count = job.meta.get("company_posting_count")
+    if count is None:
+        return bool(config.TARGETS.get("treat_unknown_size_as_small", True))
+    return count <= int(config.TARGETS.get("small_company_max_postings", 120))
+
+
+def _title_allowed(job: Job) -> bool:
+    low = (job.title or "").lower()
+
     excludes = [t.lower() for t in config.FILTERS.get("title_exclude", [])]
     if any(_term_in(term, low) for term in excludes):
         return False
+
+    # "Head of Finance" at a 20-person startup is the first finance hire.
+    # At an 800-person company it is an executive. Same words, different job.
+    soft = [t.lower() for t in config.FILTERS.get("title_exclude_unless_small", [])]
+    if any(_term_in(term, low) for term in soft) and not _is_small_company(job):
+        return False
+
     includes = [t.lower() for t in config.FILTERS.get("title_include", [])]
     if not includes:
         return True
@@ -65,7 +84,7 @@ def run(runner: str, sources: List[Source]) -> int:
         print(f"   {len(jobs)} postings" + (f", {len(errs)} error(s)" if errs else ""))
 
     # Keyword gate first - it is free, and it keeps LLM spend proportionate.
-    relevant = [j for j in collected if _title_allowed(j.title) and _location_allowed(j)]
+    relevant = [j for j in collected if _title_allowed(j) and _location_allowed(j)]
     print(f"\n{len(collected)} collected -> {len(relevant)} pass keyword filters")
 
     # Collapse duplicates within this batch (same role on two boards).

@@ -134,5 +134,11 @@ def fetch_all(companies: List[dict]) -> Tuple[List[Job], List[str]]:
         if found is None:
             errors.append(f"{name}: board not found (slug '{slug}')")
             continue
+        # Total open roles is a free, decent proxy for company size, and it
+        # decides whether senior-sounding titles are first-hire or executive.
+        for job in found:
+            job.meta["company_posting_count"] = len(found)
+            if company.get("size"):
+                job.meta["company_size"] = str(company["size"]).lower()
         jobs.extend(found)
     return jobs, errors

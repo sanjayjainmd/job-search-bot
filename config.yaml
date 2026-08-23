@@ -18,6 +18,11 @@ targets:
   remote_ok: true          # set false to require Bay Area presence
   location_is_hard_filter: false   # true = drop anything outside the list above
 
+  # A company with at most this many open roles counts as "small".
+  small_company_max_postings: 120
+  # jobspy results carry no company size, so decide what to do with them.
+  treat_unknown_size_as_small: true
+
 filters:
   # Cheap keyword gate applied BEFORE the LLM, so scoring stays cheap.
   # A job must match at least one include term in its title.
@@ -64,14 +69,19 @@ filters:
     - principal
     - lead
     - director
-    - head
-    - head of
     - vp
     - vice president
-    - chief
     - executive
     # NOTE: 'manager' is deliberately NOT excluded - the profile is
     # "Analyst through Manager level".
+
+  # Senior-sounding, but at a SMALL company these are usually the first finance
+  # hire rather than a big-company executive - so they are blocked only at
+  # large companies. Size is judged by how many roles the company has open
+  # (see targets.small_company_max_postings).
+  title_exclude_unless_small:
+    - head
+    - chief
 
 scoring:
   enabled: true
