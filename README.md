@@ -166,8 +166,20 @@ back to the database and a server would be overkill for one user:
 durable, versioned, and can be inspected locally after a `git pull`. The repo
 is private, which is what makes this safe.
 
-Trade-off worth knowing: each run commits the whole database file, so repo size
-grows slowly over time. At this scale that is a few MB a year.
+Two trade-offs worth knowing.
+
+Each run commits the whole database file, so repo size grows slowly. A few MB
+a year at this scale.
+
+And SQLite is binary, so if the cloud and your machine both write to `jobs.db`
+between pulls, git cannot merge them - you get a conflict, not a silent
+corruption (`.gitattributes` marks the file `binary -merge` to guarantee that).
+Resolve by taking one side wholesale, normally the cloud's:
+
+    git checkout --ours jobs.db && git add jobs.db && git rebase --continue
+
+You avoid it entirely by pulling before a local `run_boards.py` and pushing
+after.
 
 ## Checking it is not repeating itself
 

@@ -1,0 +1,8 @@
+# jobs.db is SQLite: binary, and a line-based merge produces a corrupt file.
+# Mark it so git never tries. If local and cloud both wrote to it, resolve by
+# taking one side wholesale - normally the cloud's, which owns discover:
+#   git checkout --ours jobs.db && git add jobs.db && git rebase --continue
+jobs.db binary -merge -diff
+
+# Generated each run; take whichever side you kept the database from.
+board.html -merge
