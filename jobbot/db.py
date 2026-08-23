@@ -69,6 +69,13 @@ def init_db(path: Path | None = None) -> None:
             );
             CREATE INDEX IF NOT EXISTS idx_source_runs_source
                 ON source_runs (source, id DESC);
+
+            CREATE TABLE IF NOT EXISTS seen_posts (
+                guid    TEXT PRIMARY KEY,
+                feed    TEXT,
+                title   TEXT,
+                seen_at TEXT NOT NULL
+            );
             """
         )
         _ensure_columns(conn)
@@ -224,3 +231,19 @@ def is_empty() -> bool:
     """True if we have no memory of any job - i.e. everything will re-send."""
     with closing(connect()) as conn:
         return conn.execute("SELECT COUNT(*) c FROM seen_jobs").fetchone()["c"] == 0
+
+
+# --- newsletter discovery --------------------------------------------------
+
+def post_seen(guid: str) -> bool:
+    with closing(connect()) as conn:
+        return conn.execute(
+            "SELECT 1 FROM seen_posts WHERE guid = ?", (guid,)).fetchone() is not None
+
+
+def mark_post_seen(guid: str, feed: str, title: str) -> None:
+    with closing(connect()) as conn:
+        conn.execute(
+            "INSERT OR IGNORE INTO seen_posts (guid, feed, title, seen_at)"
+            " VALUES (?,?,?,?)", (guid, feed, title, _now()))
+        conn.commit()

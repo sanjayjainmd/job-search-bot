@@ -222,13 +222,42 @@ ATS polling across 21 verified boards · cross-source dedup · keyword filters �
 LLM scoring · batched digest (Telegram + email) · canary · cold-start cap ·
 GitHub Actions workflow.
 
-**Stubbed on purpose — `jobbot/sources/directories.py`:**
-Company discovery from Seedtable, VCBacked, Growthlist, the YC directory and VC
-portfolio pages. This is the half that finds *companies* rather than *postings*,
-and its output feeds `companies.yaml`, which is what makes ATS polling work.
-It is stubbed because each of those sites needs a paid seat or bespoke scraping,
-and a scraper that fails silently is worse than an honest gap. **For now, add
-companies by hand — it is the highest-leverage ten minutes you can spend here.**
+## Company discovery
+
+The ATS poller is only as good as `companies.yaml`, so `jobbot/discovery.py`
+grows that list from curated job newsletters:
+
+    py run_discover.py --find-companies
+
+It takes **company names, not listings**. A listing is a snapshot - stale in
+weeks and eventually gone from the archive. A company name is permanent: once
+added, the ATS poller sees every finance role that company posts from then on,
+with a real posted date and a full description to score.
+
+Substack serves full post content at `/feed` with no auth and no paid seat,
+which is why this works where the funding directories do not - Seedtable
+returns 403 to automated fetches, which is what kept this stubbed for so long.
+
+Three gates stand between a newsletter mention and `companies.yaml`:
+
+1. **Relevance.** The model must name the specific infrastructure a company
+   builds. Applied AI is excluded however good it is - a company using AI to
+   serve doctors or lawyers is not infrastructure. Without this gate one run
+   added 271 companies including hospitals, law firms and consumer apps.
+2. **A working public ATS board.** Unresolvable names are dropped. Generic
+   single words (`arbor`, `runway`, `method`, `ghost`) are skipped outright,
+   because a resolving slug proves *a* company owns it, not the right one.
+3. **A cap per run** (`discovery.max_new_per_run`), logged when it bites, so a
+   prompt change that suddenly matches everything is a reviewable batch rather
+   than a silent flood. Results are sorted smallest-board-first, which favours
+   the Series A/B companies the strategy targets.
+
+Posts already read are recorded in `seen_posts`, so a daily scan only pays for
+new ones - and they are marked read only *after* their companies are written,
+so a crash costs a re-read rather than losing the names.
+
+Set `discovery.auto_add: false` to have runs report candidates without writing
+them. Every addition is a git commit either way.
 
 **Off by default — `jobbot/sources/apify.py`:**
 Wellfound and YC Work at a Startup. Needs real Actor IDs from the Apify Store in

@@ -76,3 +76,30 @@ companies:
 # No public ATS board found for these — they use a custom careers page or a
 # board type this bot does not speak. Left here so nobody re-guesses them:
 #   Replicate, Groq, Modular, Weights & Biases
+
+  # --- discovered from newsletters, 2026-08-23 ---
+  - { name: "Deeptune", ats: ashby, slug: deeptune }  # 1 roles
+  - { name: "Natter", ats: ashby, slug: natter }  # 3 roles
+  - { name: "Artie", ats: ashby, slug: artie }  # 4 roles
+  - { name: "Ekho", ats: ashby, slug: ekho }  # 4 roles
+  - { name: "Abundant", ats: ashby, slug: abundant }  # 5 roles
+  - { name: "Blackstar", ats: ashby, slug: blackstar }  # 5 roles
+  - { name: "Preference Model", ats: ashby, slug: preference-model }  # 7 roles
+  - { name: "Sapiom", ats: ashby, slug: sapiom }  # 8 roles
+  - { name: "PostHog", ats: ashby, slug: posthog }  # 11 roles
+  - { name: "Taste Labs", ats: ashby, slug: taste-labs }  # 11 roles
+  - { name: "Thread AI", ats: ashby, slug: thread-ai }  # 13 roles
+  - { name: "Hyperbolic", ats: ashby, slug: hyperbolic }  # 14 roles
+  - { name: "Generalist AI", ats: ashby, slug: generalist }  # 15 roles
+  - { name: "Fingerprint", ats: greenhouse, slug: fingerprint }  # 18 roles
+  - { name: "Firecrawl", ats: ashby, slug: firecrawl }  # 18 roles
+  - { name: "Normal Computing", ats: ashby, slug: normalcomputing }  # 21 roles
+  - { name: "Dust", ats: ashby, slug: dust }  # 23 roles
+  - { name: "OpenRouter", ats: ashby, slug: openrouter }  # 23 roles
+  - { name: "Prime Intellect", ats: ashby, slug: primeintellect }  # 25 roles
+  - { name: "AfterQuery", ats: ashby, slug: afterquery }  # 28 roles
+  - { name: "Goodfire", ats: greenhouse, slug: goodfire }  # 30 roles
+  - { name: "Cartesia", ats: ashby, slug: cartesia }  # 31 roles
+  - { name: "Encord", ats: ashby, slug: encord }  # 31 roles
+  - { name: "Vapi", ats: ashby, slug: vapi }  # 31 roles
+  - { name: "Composio", ats: ashby, slug: composio }  # 32 roles

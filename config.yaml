@@ -148,3 +148,28 @@ board:
   # Set it and you can tap New / Seen / Applied / Dismissed on the page itself,
   # from a phone or either laptop, with the marks shared between them.
   status_api: "https://job-search-bot-rho.vercel.app/api/status"
+
+discovery:
+  # Curated job newsletters, scanned for COMPANY NAMES rather than listings.
+  # A listing goes stale in weeks; a company name added to companies.yaml means
+  # the ATS poller sees every finance role that company posts from then on.
+  # Substack serves full post content at /feed with no auth or paid seat.
+  substacks:
+    - aioperators        # Chief of Staff / BizOps at AI startups - closest match
+    - andrewtanjobs      # weekly curated startup roles
+    - alirohdejobs       # Chief of Staff, BizOps, VC
+    - nextplayso         # early-stage startup opportunities
+    - a16zbuild          # a16z portfolio roles
+
+  # Posts already read are recorded, so a daily scan only pays for new ones.
+  # This caps the first scan, which would otherwise read every feed's backlog.
+  max_posts_per_run: 15
+
+  # Hard ceiling on additions per run. A prompt change that suddenly matches
+  # everything should be visible as a capped, reviewable batch - not 271 rows.
+  max_new_per_run: 25
+
+  # Append verified companies to companies.yaml automatically. Only companies
+  # with a working public ATS board are ever added, and every addition is a
+  # git commit you can read and revert.
+  auto_add: true

@@ -4,12 +4,13 @@
     py run_discover.py            # normal run
     py run_discover.py --verify   # check which companies.yaml slugs actually work
     py run_discover.py --stats    # is dedup working? how many new jobs per day?
+    py run_discover.py --find-companies   # scan job newsletters for new companies
 """
 from __future__ import annotations
 
 import sys
 
-from jobbot import config, db
+from jobbot import config, db, discovery
 from jobbot.pipeline import run
 from jobbot.sources import apify, ats, directories
 
@@ -62,6 +63,9 @@ def main() -> int:
         return verify()
     if "--stats" in sys.argv:
         return show_stats()
+    if "--find-companies" in sys.argv:
+        discovery.run()
+        return 0
 
     sources = [
         ("ats", lambda: ats.fetch_all(config.COMPANIES)),
