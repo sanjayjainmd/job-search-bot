@@ -1,0 +1,209 @@
+# Job Search Bot
+
+A personal job-search bot for a **financial analyst with private equity experience**
+targeting finance roles at **AI inference / AI infrastructure** startups.
+
+One codebase, **two runners**, split by runtime environment rather than by product:
+
+| Runner | Sources | Runs where | Why |
+|---|---|---|---|
+| `discover` | Direct ATS polling (Greenhouse / Lever / Ashby) | GitHub Actions | Public JSON, no blocking, no ToS problem |
+| `boards` | LinkedIn + Google via jobspy | Your own machine | LinkedIn blocks datacenter IPs |
+
+Both share one database, one filter chain, one scorer and one digest.
+
+---
+
+## Why ATS polling is the primary source
+
+Series A/B startups post to their own Greenhouse/Lever/Ashby board **before**
+LinkedIn. Those boards expose public JSON with no auth, no rate limits worth
+worrying about and no terms-of-service problem. The only thing they need is a
+list of companies — which is `companies.yaml`, and which is the one file worth
+maintaining by hand.
+
+Verified on first run: 21 company boards, ~3,459 live postings, 120 of which
+cleared the finance keyword filters.
+
+---
+
+## Setup
+
+```bash
+py -m venv .venv
+.venv\Scripts\python.exe -m pip install -r requirements-core.txt
+copy .env.example .env
+```
+
+Then edit `.env`. Everything is optional except what you want to use — with no
+keys at all it runs in `DRY_RUN` mode and prints the digest to the console.
+
+### Check the company list works
+
+```bash
+.venv\Scripts\python.exe run_discover.py --verify
+```
+
+Reports OK / BAD per company. Slugs change when companies migrate ATS, so re-run
+this occasionally — a silently-dead board is the easiest way to miss a job.
+
+### Run it
+
+```bash
+.venv\Scripts\python.exe run_discover.py
+```
+
+For the local board scraper (needs the extra dependency):
+
+```bash
+.venv\Scripts\python.exe -m pip install -r requirements-boards.txt
+.venv\Scripts\python.exe run_boards.py
+```
+
+---
+
+## Configuration
+
+| File | Holds | Commit it? |
+|---|---|---|
+| `.env` | Secrets: API keys, tokens, passwords | **Never** — it is gitignored |
+| `config.yaml` | Profile, search terms, filters, thresholds | Yes |
+| `companies.yaml` | ATS target list | Yes |
+| `jobs.db` | Seen-jobs state | No — gitignored |
+
+Retargeting the bot at a different person is a `config.yaml` edit, not a code
+change. The profile text there feeds both the relevance score and the cold-email
+hook.
+
+### Telegram (2 minutes)
+
+1. Message [@BotFather](https://t.me/botfather) -> `/newbot` -> copy the token.
+2. Put the token in `.env` as `TELEGRAM_BOT_TOKEN`.
+3. Message your new bot once (a bot cannot start a conversation).
+4. Run `.venv\Scripts\python.exe get_chat_id.py` - it validates the token and
+   prints the chat ID for you. No browser needed.
+5. Put the chat ID in `.env`, set `DRY_RUN=false`.
+
+### Email
+
+Gmail needs an **App Password** (with 2FA enabled), not your normal password.
+
+### LLM scoring (optional, recommended)
+
+Any OpenAI-compatible endpoint — OpenAI, xAI/Grok, Together, a local gateway.
+Set `LLM_API_KEY`, `LLM_BASE_URL`, `LLM_MODEL`. Without a key the bot still
+runs; it just sends everything that passes the keyword filters instead of
+ranking it. With a key, anything scoring under `scoring.min_score` is recorded
+but not sent.
+
+The scorer returns a score, a one-line reason, **and a cold-email hook** — the
+hook exists because the best roles at this stage are often not posted at all.
+
+---
+
+## Deploying `discover` to GitHub Actions
+
+1. Create a **private** repo and push. (Public would broadcast that someone is
+   job hunting.)
+2. Settings → Secrets and variables → Actions → add:
+   `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `EMAIL_SENDER`, `EMAIL_PASSWORD`,
+   `EMAIL_RECEIVER`, `SMTP_SERVER`, `SMTP_PORT`, `LLM_API_KEY`, `LLM_BASE_URL`,
+   `LLM_MODEL`.
+3. Actions tab → **discover** → *Run workflow* to test.
+
+Runs daily at 13:00 UTC (~06:00 Pacific); edit the cron in
+`.github/workflows/discover.yml`. A private repo gets 2,000 free Actions
+minutes/month and this uses roughly 100–150.
+
+State persists between runs via `actions/cache`. Caches are evicted after 7 days
+unused, which a daily schedule avoids; if the cache is ever lost, the worst case
+is some already-seen jobs resend once.
+
+`boards` is deliberately **not** in CI. Running it there would get LinkedIn
+blocked, and the failure would be silent.
+
+---
+
+## The canary
+
+The dangerous failure is not a crash — it is a scraper that gets blocked and
+returns an empty list forever, which looks exactly like "no new jobs."
+
+Every run records per-source result counts. If a source returns zero
+`canary.zero_streak_warning` runs in a row **while other sources are healthy**,
+the digest leads with a warning naming it. This covers LinkedIn blocking, dead
+Apify actors, and ATS slugs that silently change.
+
+---
+
+## What is real and what is not
+
+**Working and tested:**
+ATS polling across 21 verified boards · cross-source dedup · keyword filters ·
+LLM scoring · batched digest (Telegram + email) · canary · cold-start cap ·
+GitHub Actions workflow.
+
+**Stubbed on purpose — `jobbot/sources/directories.py`:**
+Company discovery from Seedtable, VCBacked, Growthlist, the YC directory and VC
+portfolio pages. This is the half that finds *companies* rather than *postings*,
+and its output feeds `companies.yaml`, which is what makes ATS polling work.
+It is stubbed because each of those sites needs a paid seat or bespoke scraping,
+and a scraper that fails silently is worse than an honest gap. **For now, add
+companies by hand — it is the highest-leverage ten minutes you can spend here.**
+
+**Off by default — `jobbot/sources/apify.py`:**
+Wellfound and YC Work at a Startup. Needs real Actor IDs from the Apify Store in
+`.env`. Note the free tier is $5 of credits per *month*, which two daily actors
+exhaust in days — treat it as a supplement, never a backbone.
+
+**Not automatable at all:**
+The FinOps Foundation community, and cold outreach itself. No bot does these.
+The digest's job is to tell you *who to email*; sending it is still you.
+
+---
+
+## Telegram: what a tap can and cannot do
+
+The digest makes the **job title itself a link** - one tap opens the real
+posting. In email the raw URL is printed instead.
+
+Anything scoring at or above `delivery.highlight_min_score` (top 3 by default)
+is *also* sent as its own message carrying:
+
+- a **"Open posting"** button - one tap, straight to the application page
+- a **tap-to-copy opening line** for a cold email, taken from the LLM's `hook`
+
+That is the boundary of what a send-only bot can do. Telegram buttons come in
+two kinds: **URL buttons**, which just open a link and need nothing running,
+and **callback buttons** ("Mark applied", "Snooze", "More like this"), which
+send an event back and therefore need a bot that is *listening* - a webhook or
+a long-running poller. That means a persistent process, which GitHub Actions
+cannot host (jobs cap at 6 hours) and which would need a server.
+
+So: one-tap open and one-tap copy work today, free. One-tap *state changes*
+need infrastructure - worth adding only if the digest proves itself first.
+
+Nothing is ever sent on your behalf. The opening line is a draft you copy,
+edit and send yourself.
+
+## Deliberate design choices
+
+- **Dedup key is company + normalised title, not URL** — so the same role on
+  Greenhouse and LinkedIn collapses to one entry.
+- **Jobs are marked seen only after delivery succeeds.** A failed send retries
+  next run rather than silently swallowing the job.
+- **Keyword filter runs before the LLM**, so scoring cost stays proportionate
+  (3,459 postings → 125 scored).
+- **One batched digest per run**, not one message per job.
+- **Send-only Telegram over plain HTTPS.** No `aiogram`, so no async framework
+  for something that only ever posts.
+
+---
+
+## Open decisions
+
+- **SF vs. remote.** `config.yaml` currently lists Bay Area locations with
+  `remote_ok: true` and `location_is_hard_filter: false` — i.e. remote is
+  allowed and location never drops a job. Flip the hard filter to tighten.
+- **Exact title list.** `filters.title_include` is a first pass. Watch a week of
+  digests and prune.

@@ -1,0 +1,40 @@
+# Target companies for direct ATS polling — the primary, most reliable source.
+#
+# ats: greenhouse | lever | ashby
+# slug: the company's board identifier, e.g.
+#   greenhouse -> https://boards-api.greenhouse.io/v1/boards/<slug>/jobs
+#   lever      -> https://api.lever.co/v0/postings/<slug>
+#   ashby      -> https://api.ashbyhq.com/posting-api/job-board/<slug>
+#
+# Every entry below was verified live on 2026-08-23 (posting counts at the time
+# are noted). Re-check any time with:
+#   py run_discover.py --verify
+#
+# Growing this list is the highest-leverage maintenance task in the whole bot.
+
+companies:
+  - { name: "Anthropic",     ats: greenhouse, slug: anthropic }         # 518
+  - { name: "Together AI",   ats: greenhouse, slug: togetherai }        # 64
+  - { name: "Fireworks AI",  ats: ashby,      slug: fireworks }         # 64
+  - { name: "Baseten",       ats: ashby,      slug: baseten }           # 76
+  - { name: "Modal",         ats: ashby,      slug: modal }             # 31
+  - { name: "Anyscale",      ats: lever,      slug: anyscale }          # 1
+  - { name: "Cerebras",      ats: ashby,      slug: cerebras }          # 123
+  - { name: "SambaNova",     ats: greenhouse, slug: sambanovasystems }  # 60
+  - { name: "Lambda",        ats: ashby,      slug: lambda }            # 79
+  - { name: "CoreWeave",     ats: greenhouse, slug: coreweave }         # 276
+  - { name: "RunPod",        ats: ashby,      slug: runpod }            # 20
+  - { name: "Scale AI",      ats: greenhouse, slug: scaleai }           # 208
+  - { name: "Pinecone",      ats: ashby,      slug: pinecone }          # 7
+  - { name: "LangChain",     ats: ashby,      slug: langchain }         # 105
+  - { name: "Deepgram",      ats: ashby,      slug: deepgram }          # 88
+  - { name: "ElevenLabs",    ats: ashby,      slug: elevenlabs }        # 254
+  - { name: "Perplexity",    ats: ashby,      slug: perplexity }        # 100
+  - { name: "Sierra",        ats: ashby,      slug: sierra }            # 193
+  - { name: "Databricks",    ats: greenhouse, slug: databricks }        # 821
+  - { name: "Nebius",        ats: greenhouse, slug: nebius }            # 357
+  - { name: "Vast.ai",       ats: ashby,      slug: vastai }            # 14
+
+# No public ATS board found for these — they use a custom careers page or a
+# board type this bot does not speak. Left here so nobody re-guesses them:
+#   Replicate, Groq, Modular, Weights & Biases

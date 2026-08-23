@@ -1,0 +1,2 @@
+# Only needed if you enable Apify sources (Wellfound / YC Work at a Startup)
+apify-client>=1.6

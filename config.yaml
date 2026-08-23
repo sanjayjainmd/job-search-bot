@@ -1,0 +1,92 @@
+# Everything person-specific lives here. No code changes needed to retarget.
+
+profile:
+  name: "Financial analyst"
+  summary: >
+    Financial analyst with private equity experience, targeting finance roles at
+    AI inference / AI infrastructure startups. Strong on financial modelling,
+    diligence, unit economics and capital allocation. Interested in roles where
+    finance work touches compute spend, GPU/inference cost, pricing and margin
+    structure. Open to being an early finance hire at a small company.
+  seniority: "Analyst through Manager level. Not VP or C-suite."
+
+targets:
+  # Used to build search queries and to sanity-check job locations.
+  locations:
+    - "San Francisco"
+    - "San Francisco Bay Area"
+  remote_ok: true          # set false to require Bay Area presence
+  location_is_hard_filter: false   # true = drop anything outside the list above
+
+filters:
+  # Cheap keyword gate applied BEFORE the LLM, so scoring stays cheap.
+  # A job must match at least one include term in its title.
+  title_include:
+    - finance
+    - financial
+    - fp&a
+    - fpa
+    - strategic finance
+    - bizops
+    - business operations
+    - corporate development
+    - corp dev
+    - finops
+    - revenue operations
+    - treasury
+    - controller
+    - accounting
+    - pricing
+    - chief of staff
+    - business analyst
+    - investment
+  # Any of these in the title drops the job outright.
+  title_exclude:
+    - engineer
+    - engineering
+    - developer
+    - scientist
+    - designer
+    - recruiter
+    - account executive
+    - sales development
+    - marketing
+    - customer support
+    - customer success
+    - intern
+    - internship
+    - data analyst
+    - security
+
+scoring:
+  enabled: true
+  min_score: 60           # jobs scoring below this are stored but not sent
+  model_max_tokens: 400
+
+boards:
+  # Passed to jobspy on the local runner.
+  search_terms:
+    - 'financial analyst AI infrastructure'
+    - '"strategic finance" startup San Francisco'
+    - 'FP&A analyst AI startup'
+    - 'finance analyst GPU OR inference OR compute'
+  sites: ["linkedin", "google"]
+  results_wanted: 20
+  hours_old: 72
+
+canary:
+  # Warn if a source returns zero results this many runs in a row while
+  # other sources are healthy. Catches silent blocking / dead scrapers.
+  zero_streak_warning: 3
+
+delivery:
+  # Safety valve for the first run against an empty database, which would
+  # otherwise send every historical posting at once. Anything over the cap is
+  # left unseen and arrives on the following run, so nothing is lost.
+  max_send_per_run: 25
+
+  # The strongest matches are ALSO sent as individual Telegram messages with a
+  # one-tap "Open posting" button and a tap-to-copy opening line. Set
+  # highlight_top: 0 to turn this off and keep the digest only.
+  highlight_top: 3
+  highlight_min_score: 75

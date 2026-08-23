@@ -1,0 +1,3 @@
+# Local runner (boards) — everything in core, plus job-board scraping
+-r requirements-core.txt
+python-jobspy>=1.1.80
