@@ -1,8 +1,8 @@
 # Secrets — never commit
 .env
 
-# Local state
-jobs.db
+# jobs.db and board.html are deliberately COMMITTED - they are the bot's
+# durable state and its readable output. The repo is private.
 *.db-journal
 
 # Python

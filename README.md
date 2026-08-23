@@ -124,6 +124,33 @@ blocked, and the failure would be silent.
 
 ---
 
+## The board
+
+The Telegram digest is a delta - what changed today. `board.html` is the
+opposite: every job ever matched, grouped by status, nothing ever removed.
+
+It is regenerated on every run and committed to the repo, so `git pull` and
+open it in a browser. Filter tabs: New / Seen / Applied / Dismissed / All.
+Stretch-tier ("worth a look") jobs are tinted.
+
+Status is changed from the command line, because a static page cannot write
+back to the database and a server would be overkill for one user:
+
+    py mark.py                    # list everything still "new", with refs
+    py mark.py 3f9a21bc applied   # set one job (click a ref on the board to copy it)
+    py mark.py --all-seen         # clear the "new" pile in one go
+    py mark.py --counts
+
+## State lives in the repo
+
+`jobs.db` is committed rather than kept in a CI cache. Caches expire after
+7 days unused and are invisible from your machine; a committed database is
+durable, versioned, and can be inspected locally after a `git pull`. The repo
+is private, which is what makes this safe.
+
+Trade-off worth knowing: each run commits the whole database file, so repo size
+grows slowly over time. At this scale that is a few MB a year.
+
 ## Checking it is not repeating itself
 
     .venv\Scripts\python.exe run_discover.py --stats

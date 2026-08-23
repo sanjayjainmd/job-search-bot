@@ -10,7 +10,7 @@ import os
 import re
 from typing import Callable, List, Tuple
 
-from . import canary, config, db, notify
+from . import board, canary, config, db, notify
 from .models import Job
 from .score import score_job
 
@@ -188,6 +188,8 @@ def run(runner: str, sources: List[Source]) -> int:
             db.record_job(job, notified=job in to_send)
     else:
         print("  ! delivery failed - not marking jobs as seen; they retry next run")
+
+    board.write()
 
     print(f"\n=== {runner} done: {len(primary)} primary + {len(stretch)} stretch sent ===\n")
     return len(to_send)
