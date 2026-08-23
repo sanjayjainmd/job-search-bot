@@ -144,7 +144,7 @@ def run(runner: str, sources: List[Source]) -> int:
         if held:
             print(f"{held} below threshold - recorded, not sent")
     elif fresh:
-        print("Scoring disabled (no LLM_API_KEY) - sending everything that passed filters")
+        print("Scoring disabled (no ANTHROPIC_API_KEY) - sending everything that passed filters")
 
     # The stretch section must never swamp the digest.
     stretch_cap = int(config.CFG.get("delivery", {}).get("max_stretch_per_run", 10))

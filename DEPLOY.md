@@ -86,9 +86,8 @@ Add these too, only if you are using them:
 
 | Name | Value |
 |---|---|
-| `LLM_API_KEY` | your OpenAI-compatible key |
-| `LLM_BASE_URL` | e.g. `https://api.openai.com/v1` |
-| `LLM_MODEL` | e.g. `gpt-4o-mini` |
+| `ANTHROPIC_API_KEY` | from console.anthropic.com |
+| `LLM_MODEL` | `claude-haiku-4-5` |
 | `EMAIL_SENDER` / `EMAIL_PASSWORD` / `EMAIL_RECEIVER` | Gmail App Password, not your login password |
 | `SMTP_SERVER` / `SMTP_PORT` | `smtp.gmail.com` / `587` |
 

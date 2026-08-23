@@ -43,9 +43,8 @@ EMAIL_RECEIVER = _env("EMAIL_RECEIVER")
 SMTP_SERVER = _env("SMTP_SERVER", "smtp.gmail.com")
 SMTP_PORT = int(_env("SMTP_PORT", "587"))
 
-LLM_API_KEY = _env("LLM_API_KEY")
-LLM_BASE_URL = _env("LLM_BASE_URL", "https://api.openai.com/v1").rstrip("/")
-LLM_MODEL = _env("LLM_MODEL", "gpt-4o-mini")
+ANTHROPIC_API_KEY = _env("ANTHROPIC_API_KEY")
+LLM_MODEL = _env("LLM_MODEL", "claude-haiku-4-5")
 
 APIFY_TOKEN = _env("APIFY_TOKEN")
 APIFY_WELLFOUND_ACTOR = _env("APIFY_WELLFOUND_ACTOR")
@@ -63,7 +62,7 @@ SCORING = CFG.get("scoring", {})
 BOARDS = CFG.get("boards", {})
 CANARY = CFG.get("canary", {})
 
-SCORING_ENABLED = bool(SCORING.get("enabled", True)) and bool(LLM_API_KEY)
+SCORING_ENABLED = bool(SCORING.get("enabled", True)) and bool(ANTHROPIC_API_KEY)
 MIN_SCORE = int(SCORING.get("min_score", 60))
 ZERO_STREAK_WARNING = int(CANARY.get("zero_streak_warning", 3))
 

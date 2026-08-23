@@ -90,11 +90,19 @@ Gmail needs an **App Password** (with 2FA enabled), not your normal password.
 
 ### LLM scoring (optional, recommended)
 
-Any OpenAI-compatible endpoint — OpenAI, xAI/Grok, Together, a local gateway.
-Set `LLM_API_KEY`, `LLM_BASE_URL`, `LLM_MODEL`. Without a key the bot still
-runs; it just sends everything that passes the keyword filters instead of
-ranking it. With a key, anything scoring under `scoring.min_score` is recorded
-but not sent.
+Claude Haiku 4.5 via the official Anthropic SDK. Set `ANTHROPIC_API_KEY` (from
+console.anthropic.com); `LLM_MODEL` defaults to `claude-haiku-4-5`. Without a
+key the bot still runs; it just sends everything that passes the keyword
+filters instead of ranking it. With a key, anything scoring under
+`scoring.min_score` is recorded but not sent.
+
+Haiku is the right tier here — this is short-text classification, not
+reasoning, and it is the cheapest current Claude model. Each job costs roughly
+1,050 input and 120 output tokens, so at $1/$5 per million the whole starting
+backlog is about **$0.22** and ongoing use is pennies a month.
+
+Replies use **structured outputs** (a JSON schema enforced by the API), so
+there is no regex extraction and no retry-on-parse loop.
 
 The scorer returns a score, a one-line reason, **and a cold-email hook** — the
 hook exists because the best roles at this stage are often not posted at all.
@@ -107,7 +115,7 @@ hook exists because the best roles at this stage are often not posted at all.
    job hunting.)
 2. Settings → Secrets and variables → Actions → add:
    `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `EMAIL_SENDER`, `EMAIL_PASSWORD`,
-   `EMAIL_RECEIVER`, `SMTP_SERVER`, `SMTP_PORT`, `LLM_API_KEY`, `LLM_BASE_URL`,
+   `EMAIL_RECEIVER`, `SMTP_SERVER`, `SMTP_PORT`, `ANTHROPIC_API_KEY`,
    `LLM_MODEL`.
 3. Actions tab → **discover** → *Run workflow* to test.
 
