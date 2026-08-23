@@ -130,7 +130,7 @@ delivery:
   # Safety valve for the first run against an empty database, which would
   # otherwise send every historical posting at once. Anything over the cap is
   # left unseen and arrives on the following run, so nothing is lost.
-  max_send_per_run: 25
+  max_send_per_run: 200   # TEMPORARY for the clean-start run; put back to 25
 
   # The strongest matches are ALSO sent as individual Telegram messages with a
   # one-tap "Open posting" button and a tap-to-copy opening line. Set
