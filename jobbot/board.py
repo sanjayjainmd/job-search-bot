@@ -192,6 +192,21 @@ function storedKey() {
   return (localStorage.getItem('board_key') || '').trim();
 }
 
+// A ?key=... parameter lets one link configure a new device, so handing the
+// board to someone else is a URL rather than a URL plus a 40-character string.
+// It is consumed on arrival: saved to local storage, then stripped from the
+// address bar with replaceState so it does not sit in the visible URL or get
+// copied onward when someone shares the page from their address bar.
+(function adoptKeyFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const fromUrl = (params.get('key') || '').trim();
+  if (!fromUrl) return;
+  localStorage.setItem('board_key', fromUrl);
+  params.delete('key');
+  const rest = params.toString();
+  history.replaceState(null, '', window.location.pathname + (rest ? '?' + rest : ''));
+})();
+
 function showKeyForm(message) {
   sync.className = 'bad';
   sync.innerHTML = '';

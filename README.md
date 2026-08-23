@@ -259,6 +259,22 @@ so a crash costs a re-read rather than losing the names.
 Set `discovery.auto_add: false` to have runs report candidates without writing
 them. Every addition is a git commit either way.
 
+## Sharing the board with someone else
+
+Append the key as a URL parameter and the link configures itself:
+
+    https://<you>.github.io/job-board/?key=<BOARD_KEY>
+
+The page saves the key to that browser's local storage and strips it from the
+address bar, so it is not left in the visible URL or copied onward when someone
+shares the page. After that the device is set up permanently and the plain URL
+works.
+
+The trade-off: the key sits in whatever channel the link was sent through, and
+in browser history until that entry ages out. Acceptable for a shared secret
+guarding public job listings and your own status marks - not a pattern to reuse
+for anything sensitive.
+
 **Off by default — `jobbot/sources/apify.py`:**
 Wellfound and YC Work at a Startup. Needs real Actor IDs from the Apify Store in
 `.env`. Note the free tier is $5 of credits per *month*, which two daily actors
