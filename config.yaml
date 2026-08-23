@@ -36,8 +36,8 @@ filters:
     - treasury
     - controller
     - accounting
+    - accountant
     - pricing
-    - chief of staff
     - business analyst
     - investment
   # Any of these in the title drops the job outright.
@@ -57,6 +57,21 @@ filters:
     - internship
     - data analyst
     - security
+    # Seniority above the target level. Matched as whole words, so 'sr' will
+    # not hit 'disaster' and 'intern' will not hit 'internal audit'.
+    - senior
+    - sr
+    - principal
+    - lead
+    - director
+    - head
+    - head of
+    - vp
+    - vice president
+    - chief
+    - executive
+    # NOTE: 'manager' is deliberately NOT excluded - the profile is
+    # "Analyst through Manager level".
 
 scoring:
   enabled: true

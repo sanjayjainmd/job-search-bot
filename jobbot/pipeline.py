@@ -1,6 +1,7 @@
 """Shared pipeline. Both runners call run() with a different set of sources."""
 from __future__ import annotations
 
+import re
 from typing import Callable, List, Tuple
 
 from . import canary, config, db, notify
@@ -11,15 +12,21 @@ from .score import score_job
 Source = Tuple[str, Callable[[], Tuple[List[Job], List[str]]]]
 
 
+def _term_in(term: str, text: str) -> bool:
+    """Whole-word match. Substring matching wrongly drops 'Internal Audit'
+    on the term 'intern', and 'Disaster Recovery' on 'sr'."""
+    return re.search(rf"(?<!\w){re.escape(term)}(?!\w)", text) is not None
+
+
 def _title_allowed(title: str) -> bool:
     low = (title or "").lower()
     excludes = [t.lower() for t in config.FILTERS.get("title_exclude", [])]
-    if any(term in low for term in excludes):
+    if any(_term_in(term, low) for term in excludes):
         return False
     includes = [t.lower() for t in config.FILTERS.get("title_include", [])]
     if not includes:
         return True
-    return any(term in low for term in includes)
+    return any(_term_in(term, low) for term in includes)
 
 
 def _location_allowed(job: Job) -> bool:
