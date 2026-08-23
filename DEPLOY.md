@@ -134,6 +134,61 @@ have already seen locally. One duplicate wave, then it is clean.
 
 ---
 
+## Step 7 - Publish the board to the web (optional)
+
+Puts `board.html` on a URL you can open from a phone. Only that one file is
+published; the database, company list and config stay in the private repo.
+
+### 7a. Create the public repo
+
+1. **https://github.com/new**
+2. Name it **`job-board`** (must match `BOARD_REPO` in the workflow)
+3. Select **Public** - GitHub Pages on a free account only works from a public
+   repo. Upgrading to Pro does NOT make a Pages site private; access-controlled
+   Pages is Enterprise only.
+4. Tick **Add a README file** so the repo is not empty (Pages needs a commit)
+5. **Create repository**
+
+### 7b. Turn on Pages
+
+In `job-board`: **Settings** -> **Pages** -> Source: **Deploy from a branch**,
+Branch: **main**, folder: **/ (root)** -> **Save**.
+
+Your URL will be `https://<your-username>.github.io/job-board/`.
+
+### 7c. Create a token the bot can publish with
+
+The workflow runs in the private repo and needs permission to write to the
+public one. Its built-in token cannot do that, so create a scoped token:
+
+1. github.com -> avatar -> **Settings** -> **Developer settings**
+2. **Personal access tokens** -> **Fine-grained tokens** -> **Generate new token**
+3. Name: `board-deploy`; Expiration: your choice (you will need to renew it)
+4. **Repository access**: *Only select repositories* -> pick **`job-board`** only
+5. **Permissions** -> Repository permissions -> **Contents: Read and write**
+6. **Generate token** and copy it
+
+Scoping it to one repo matters: a classic token with `repo` scope would let the
+bot write to everything you own.
+
+### 7d. Add it as a secret
+
+In the **private** repo: Settings -> Secrets and variables -> Actions ->
+**New repository secret**, named exactly **`BOARD_DEPLOY_TOKEN`**.
+
+Until this secret exists the publish step skips itself and prints a note, so
+nothing breaks in the meantime.
+
+### 7e. Run and check
+
+Run the workflow. The log ends with the published URL. First deploy takes a
+minute or two; after that updates appear within a few minutes of each run.
+
+The page is public - anyone with the URL can read it. It holds only public job
+listings and no personal details, but your applied/dismissed marks are visible.
+
+---
+
 ## Ongoing
 
 | Task | How often | Command / place |

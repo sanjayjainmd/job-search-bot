@@ -130,7 +130,8 @@ The Telegram digest is a delta - what changed today. `board.html` is the
 opposite: every job ever matched, grouped by status, nothing ever removed.
 
 It is regenerated on every run and committed to the repo, so `git pull` and
-open it in a browser. Filter tabs: New / Seen / Applied / Dismissed / All.
+open it in a browser - or read it from a phone once published to GitHub Pages
+(see DEPLOY.md step 7). Filter tabs: New / Seen / Applied / Dismissed / All.
 Stretch-tier ("worth a look") jobs are tinted.
 
 Sort by **newest posted**, **oldest posted**, **best score** or **recently

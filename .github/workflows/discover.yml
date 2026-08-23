@@ -6,13 +6,18 @@ on:
     - cron: "0 13 * * *"
   workflow_dispatch:        # gives you (and any collaborator) a "Run workflow" button
 
-# Needed so the run can commit jobs.db and board.html back to the repo.
+# Needed so the run can commit jobs.db and board.html back to this repo.
 permissions:
   contents: write
 
 concurrency:
   group: discover
   cancel-in-progress: false
+
+env:
+  # Public repo that hosts the board via GitHub Pages. Only board.html is
+  # copied there; the database, company list and config stay in this private repo.
+  BOARD_REPO: job-board
 
 jobs:
   discover:
@@ -67,4 +72,39 @@ jobs:
             git commit -m "State: $(date -u '+%Y-%m-%d %H:%M UTC')"
             git pull --rebase --autostash origin main
             git push origin HEAD:main
+          fi
+
+      # Copies ONLY board.html to the public repo that serves GitHub Pages.
+      # Skips silently until BOARD_DEPLOY_TOKEN exists, so the run never breaks
+      # just because publishing is not set up yet.
+      - name: Publish board to GitHub Pages
+        if: always()
+        env:
+          DEPLOY_TOKEN: ${{ secrets.BOARD_DEPLOY_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          if [ -z "$DEPLOY_TOKEN" ]; then
+            echo "BOARD_DEPLOY_TOKEN not set - skipping publish."
+            exit 0
+          fi
+          if [ ! -f board.html ]; then
+            echo "No board.html to publish."
+            exit 0
+          fi
+          rm -rf /tmp/board
+          git clone --quiet --depth 1 \
+            "https://x-access-token:${DEPLOY_TOKEN}@github.com/${OWNER}/${BOARD_REPO}.git" \
+            /tmp/board
+          # index.html so the bare Pages URL works with no path.
+          cp board.html /tmp/board/index.html
+          cd /tmp/board
+          git config user.name "job-search-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --staged --quiet; then
+            echo "Board unchanged."
+          else
+            git commit --quiet -m "Board: $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git push --quiet
+            echo "Published to https://${OWNER}.github.io/${BOARD_REPO}/"
           fi
