@@ -1,4 +1,4 @@
-"""Delivery: one batched digest per run, not one message per job."""
+"""Delivery: one batched digest per run, in two tiers."""
 from __future__ import annotations
 
 import html
@@ -34,50 +34,81 @@ def _chunk(text: str, limit: int = TELEGRAM_LIMIT) -> List[str]:
     return chunks
 
 
-def build_digest(jobs: List[Job], warnings: List[str], runner: str,
-                 stats: dict[str, int]) -> tuple[str, str]:
-    """Returns (html_for_telegram, plaintext_for_email)."""
-    hjobs = sorted(jobs, key=lambda j: (j.score is None, -(j.score or 0)))
+def _sorted(jobs: List[Job]) -> List[Job]:
+    return sorted(jobs, key=lambda j: (j.score is None, -(j.score or 0)))
 
-    counts = ", ".join(f"{src}={n}" for src, n in sorted(stats.items())) or "no sources ran"
-    header_txt = f"[{runner}] {len(hjobs)} new job(s) - {counts}"
-    h = [f"<b>{_esc(header_txt)}</b>"]
-    t = [header_txt, "=" * len(header_txt)]
+
+def _detail_line(job: Job) -> str:
+    parts = [f"{job.score}/100"]
+    if job.fit:
+        parts.append(job.fit)
+    if job.seniority:
+        parts.append(f"level: {job.seniority}")
+    return " | ".join(parts)
+
+
+def _job_html(job: Job) -> str:
+    lines = [f"\n<b><a href=\"{_esc(job.url)}\">{_esc(job.title)}</a></b>",
+             f"\U0001F3E2 {_esc(job.company)}"]
+    if job.location:
+        lines.append(f"\U0001F4CD {_esc(job.location)}")
+    if job.score is not None:
+        lines.append(f"\U0001F3AF {_esc(_detail_line(job))} - {_esc(job.reason or '')}")
+    if job.hook:
+        lines.append(f"✉️ <i>{_esc(job.hook)}</i>")
+    lines.append(f"<i>{_esc(job.source)}</i>")
+    return "\n".join(lines)
+
+
+def _job_text(job: Job) -> str:
+    lines = [f"\n{job.title}", f"  Company : {job.company}"]
+    if job.location:
+        lines.append(f"  Location: {job.location}")
+    if job.score is not None:
+        lines.append(f"  Score   : {_detail_line(job)} - {job.reason or ''}")
+    if job.hook:
+        lines.append(f"  Hook    : {job.hook}")
+    lines.append(f"  Source  : {job.source}")
+    lines.append(f"  Link    : {job.url}")
+    return "\n".join(lines)
+
+
+STRETCH_NOTE = ("Senior-sounding titles at larger companies. Kept rather than "
+                "dropped, so nothing is lost silently.")
+
+
+def build_digest(primary: List[Job], stretch: List[Job], warnings: List[str],
+                 runner: str, stats: dict[str, int]) -> tuple[str, str]:
+    """Returns (html_for_telegram, plaintext_for_email)."""
+    primary, stretch = _sorted(primary), _sorted(stretch)
+
+    counts = ", ".join(f"{s}={n}" for s, n in sorted(stats.items())) or "no sources ran"
+    header = f"[{runner}] {len(primary)} match(es)"
+    if stretch:
+        header += f" + {len(stretch)} worth a look"
+    header += f" - {counts}"
+
+    h = [f"<b>{_esc(header)}</b>"]
+    t = [header, "=" * len(header)]
 
     for w in warnings:
         h.append(f"\n⚠️ <i>{_esc(w)}</i>")
         t.append(f"\n[WARNING] {w}")
 
-    for job in hjobs:
-        score_line = ""
-        if job.score is not None:
-            score_line = f"{job.score}/100 {job.fit}"
+    if primary:
+        for job in primary:
+            h.append(_job_html(job))
+            t.append(_job_text(job))
+    else:
+        h.append("\n<i>No new matches.</i>")
+        t.append("\nNo new matches.")
 
-        block_h = [f"\n<b><a href=\"{_esc(job.url)}\">{_esc(job.title)}</a></b>",
-                   f"🏢 {_esc(job.company)}"]
-        if job.location:
-            block_h.append(f"📍 {_esc(job.location)}")
-        if score_line:
-            block_h.append(f"🎯 {_esc(score_line)} - {_esc(job.reason or '')}")
-        if job.hook:
-            block_h.append(f"✉️ <i>{_esc(job.hook)}</i>")
-        block_h.append(f"<i>{_esc(job.source)}</i>")
-        h.append("\n".join(block_h))
-
-        block_t = [f"\n{job.title}", f"  Company : {job.company}"]
-        if job.location:
-            block_t.append(f"  Location: {job.location}")
-        if score_line:
-            block_t.append(f"  Score   : {score_line} - {job.reason or ''}")
-        if job.hook:
-            block_t.append(f"  Hook    : {job.hook}")
-        block_t.append(f"  Source  : {job.source}")
-        block_t.append(f"  Link    : {job.url}")
-        t.append("\n".join(block_t))
-
-    if not hjobs:
-        h.append("\n<i>Nothing new that cleared the filters.</i>")
-        t.append("\nNothing new that cleared the filters.")
+    if stretch:
+        h.append(f"\n<b>WORTH A LOOK</b>\n<i>{_esc(STRETCH_NOTE)}</i>")
+        t.append(f"\n{'-' * 40}\nWORTH A LOOK\n{STRETCH_NOTE}")
+        for job in stretch:
+            h.append(_job_html(job))
+            t.append(_job_text(job))
 
     return "\n\n".join(h), "\n".join(t)
 
@@ -89,16 +120,12 @@ def send_telegram(html_body: str) -> bool:
     ok = True
     for part in _chunk(html_body):
         try:
-            resp = requests.post(
-                url,
-                json={
-                    "chat_id": config.TELEGRAM_CHAT_ID,
-                    "text": part,
-                    "parse_mode": "HTML",
-                    "disable_web_page_preview": True,
-                },
-                timeout=30,
-            )
+            resp = requests.post(url, json={
+                "chat_id": config.TELEGRAM_CHAT_ID,
+                "text": part,
+                "parse_mode": "HTML",
+                "disable_web_page_preview": True,
+            }, timeout=30)
             resp.raise_for_status()
         except requests.RequestException as exc:
             print(f"  ! telegram send failed: {exc}")
@@ -134,11 +161,11 @@ def _draft_opener(job: Job) -> str:
 
 
 def send_highlights(jobs: List[Job]) -> int:
-    """Send the strongest matches as individual messages with a one-tap button.
+    """Strongest matches as individual messages with a one-tap button.
 
-    Deliberately URL buttons only. A button that does something *inside*
-    Telegram (mark applied, snooze, thumbs up) needs a bot that listens for
-    callbacks, which means a persistent process - see README.
+    URL buttons only. A button that acts *inside* Telegram (mark applied,
+    snooze) needs a bot that listens for callbacks, which means a persistent
+    process - see README.
     """
     if not (config.TELEGRAM_BOT_TOKEN and config.TELEGRAM_CHAT_ID):
         return 0
@@ -149,8 +176,7 @@ def send_highlights(jobs: List[Job]) -> int:
     if top_n <= 0:
         return 0
 
-    ranked = sorted((j for j in jobs if (j.score or 0) >= min_score),
-                    key=lambda j: -(j.score or 0))[:top_n]
+    ranked = _sorted([j for j in jobs if (j.score or 0) >= min_score])[:top_n]
     if not ranked:
         return 0
 
@@ -181,14 +207,10 @@ def send_highlights(jobs: List[Job]) -> int:
     return sent
 
 
-def deliver(jobs: List[Job], warnings: List[str], runner: str,
-            stats: dict[str, int]) -> bool:
-    """Send the digest. Returns True if it reached at least one channel.
-
-    In DRY_RUN, prints to console and reports success so the run still
-    marks jobs as seen only when the caller wants it to.
-    """
-    html_body, text_body = build_digest(jobs, warnings, runner, stats)
+def deliver(primary: List[Job], stretch: List[Job], warnings: List[str],
+            runner: str, stats: dict[str, int]) -> bool:
+    """Send the digest. Returns True if it reached at least one channel."""
+    html_body, text_body = build_digest(primary, stretch, warnings, runner, stats)
 
     if config.DRY_RUN:
         print("\n----- DRY RUN: digest would be sent -----")
@@ -201,13 +223,15 @@ def deliver(jobs: List[Job], warnings: List[str], runner: str,
         print(text_body)
         return False
 
-    subject = f"[{runner}] {len(jobs)} new job(s)"
+    subject = f"[{runner}] {len(primary)} match(es)"
+    if stretch:
+        subject += f" + {len(stretch)} worth a look"
     if warnings:
-        subject = "⚠️ " + subject
+        subject = "[!] " + subject
 
     sent_tg = send_telegram(html_body)
     if sent_tg:
-        n = send_highlights(jobs)
+        n = send_highlights(primary)   # highlights come from primary only
         if n:
             print(f"  {n} highlight message(s) sent with Open buttons")
     sent_email = send_email(subject, text_body)

@@ -36,6 +36,7 @@ class Job:
     # Filled in later by the scoring layer.
     score: Optional[int] = None
     fit: Optional[str] = None
+    seniority: Optional[str] = None
     reason: Optional[str] = None
     hook: Optional[str] = None
     meta: dict = field(default_factory=dict)

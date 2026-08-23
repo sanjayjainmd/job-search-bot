@@ -36,12 +36,24 @@ Score this job posting 0-100 for fit with the candidate.
 Weigh heavily:
 - Is this a FINANCE / strategy / business-operations role (not engineering)?
 - Is the company in AI inference, AI infrastructure, GPU/compute, or ML tooling?
-- Is the seniority right? Penalise VP/C-level and heavily-senior roles.
 - Does the work plausibly touch unit economics, compute cost, pricing or margin?
+
+Judge SENIORITY from the DESCRIPTION, not the title. Titles mislead in both
+directions: "Head of Finance" at a 20-person startup is a first finance hire,
+while "Analyst" at a large firm can demand 8 years. Look for the required years
+of experience, who the role reports to, whether it manages a team, and phrases
+like "first finance hire" or "founding". Report it as:
+  Below  - clearly junior to the candidate
+  At     - matches the candidate's level
+  Above  - clearly beyond the candidate (e.g. 8+ years required, runs a team,
+           true executive scope)
+Score "Above" roles low unless the company is small enough that the title
+overstates the actual job.
 
 Return JSON with exactly these keys:
 {{"score": <int 0-100>,
   "fit": "<High|Medium|Low>",
+  "seniority": "<Below|At|Above>",
   "reason": "<one sentence, max 25 words>",
   "hook": "<one sentence the candidate could open a cold email with, referencing
             something specific about this company or role; empty string if nothing specific>"}}
@@ -82,6 +94,7 @@ def _parse(content: str) -> Optional[dict]:
     return {
         "score": max(0, min(100, score)),
         "fit": str(data.get("fit", "")).strip() or "Unknown",
+        "seniority": str(data.get("seniority", "")).strip() or "",
         "reason": str(data.get("reason", "")).strip(),
         "hook": str(data.get("hook", "")).strip(),
     }
@@ -124,6 +137,7 @@ def score_job(job: Job, timeout: int = 45) -> Optional[dict]:
 
     job.score = parsed["score"]
     job.fit = parsed["fit"]
+    job.seniority = parsed["seniority"]
     job.reason = parsed["reason"]
     job.hook = parsed["hook"]
     return parsed

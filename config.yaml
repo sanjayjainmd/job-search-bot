@@ -18,8 +18,10 @@ targets:
   remote_ok: true          # set false to require Bay Area presence
   location_is_hard_filter: false   # true = drop anything outside the list above
 
-  # A company with at most this many open roles counts as "small".
-  small_company_max_postings: 120
+  # A company with at most this many open roles counts as small. 40 is roughly
+  # a sub-150-person company. Raise it to be more permissive about senior
+  # titles; lower it to push more of them into the Worth a look section.
+  small_company_max_postings: 40
   # jobspy results carry no company size, so decide what to do with them.
   treat_unknown_size_as_small: true
 
@@ -62,30 +64,30 @@ filters:
     - internship
     - data analyst
     - security
-    # Seniority above the target level. Matched as whole words, so 'sr' will
-    # not hit 'disaster' and 'intern' will not hit 'internal audit'.
+    # NOTE: 'manager' is deliberately NOT excluded - the profile is
+    # "Analyst through Manager level".
+
+  # Senior-sounding titles are NEVER dropped - dropping loses jobs silently.
+  # At a small company these usually mean "first finance hire", so they are
+  # treated as a normal match. At a large company they go into the digest's
+  # "Worth a look" section instead. Size comes from targets.* below, or from
+  # an explicit `size:` on the company in companies.yaml.
+  title_stretch:
     - senior
     - sr
     - principal
     - lead
     - director
+    - head
     - vp
     - vice president
-    - executive
-    # NOTE: 'manager' is deliberately NOT excluded - the profile is
-    # "Analyst through Manager level".
-
-  # Senior-sounding, but at a SMALL company these are usually the first finance
-  # hire rather than a big-company executive - so they are blocked only at
-  # large companies. Size is judged by how many roles the company has open
-  # (see targets.small_company_max_postings).
-  title_exclude_unless_small:
-    - head
     - chief
+    - executive
 
 scoring:
   enabled: true
   min_score: 60           # jobs scoring below this are stored but not sent
+  stretch_min_score: 70   # 'Worth a look' items must clear a higher bar
   model_max_tokens: 400
 
 boards:
@@ -113,5 +115,8 @@ delivery:
   # The strongest matches are ALSO sent as individual Telegram messages with a
   # one-tap "Open posting" button and a tap-to-copy opening line. Set
   # highlight_top: 0 to turn this off and keep the digest only.
+  # Cap on the 'Worth a look' section so it cannot swamp the digest.
+  max_stretch_per_run: 10
+
   highlight_top: 3
   highlight_min_score: 75
