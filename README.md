@@ -151,8 +151,13 @@ Anything open 6 months or more is flagged in red. Those are usually evergreen
 reqs a company leaves permanently open, not live openings, and they are worth
 treating differently from something posted last week.
 
-Status is changed from the command line, because a static page cannot write
-back to the database and a server would be overkill for one user:
+Status can be changed **from the page on any device** once `board.status_api`
+is set in config.yaml - tap New / Seen / Applied / Dismissed and the mark is
+stored centrally, so a change on your phone shows up on either laptop. That
+needs the small Vercel function in `vercel/` (see its README); a static page
+cannot write to a database on its own.
+
+Without it the board is read-only and status is changed from the command line:
 
     py mark.py                    # list everything still "new", with refs
     py mark.py 3f9a21bc applied   # set one job (click a ref on the board to copy it)

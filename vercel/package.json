@@ -1,0 +1,7 @@
+{
+  "name": "job-board-status",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Cross-device status endpoint for the job board"
+}

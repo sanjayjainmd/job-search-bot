@@ -4,17 +4,27 @@ The Telegram digest is a delta: what changed today. This is the opposite -
 nothing is ever removed from it, so you can always see the whole matching set
 and what you have done with each one.
 
-Status is changed with mark.py, not from the page, because a static file
-cannot write back to the database and a server would be overkill.
+Status can be changed two ways:
+
+- From the page, on any device, if `board.status_api` is set in config.yaml.
+  A static page cannot write to the database, so marks go to a small Vercel
+  function backed by Redis (see vercel/README.md). That is what makes a mark
+  on the phone show up on the laptop.
+- From the command line with mark.py, which writes to jobs.db.
+
+The two are deliberately separate: jobs.db records what was *sent*, the API
+records your reading state on top of it. When both exist the API wins in the
+page, because it is the one you can update from anywhere.
 """
 from __future__ import annotations
 
 import html
+import json
 from datetime import date, datetime
 from pathlib import Path
 from typing import List, Optional
 
-from . import db
+from . import config, db
 
 STATUS_LABEL = {
     "new": "New",
@@ -85,13 +95,27 @@ select {
 }
 .reason { margin-top: .4rem; font-size: .875rem; }
 .hook { margin-top: .3rem; font-size: .875rem; font-style: italic; color: var(--muted); }
+.marks { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .6rem; }
+.mark {
+  border: 1px solid var(--line); background: transparent; color: var(--muted);
+  border-radius: .35rem; padding: .3rem .6rem; font-size: .8125rem; cursor: pointer;
+  min-height: 2rem;
+}
+.mark:hover { border-color: var(--accent); color: var(--fg); }
+.mark[aria-pressed="true"] {
+  background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600;
+}
 .empty { color: var(--muted); padding: 2rem 0; }
 footer { color: var(--muted); font-size: .8125rem; margin-top: 2rem;
          border-top: 1px solid var(--line); padding-top: 1rem; }
 code { background: var(--badge); padding: .1rem .3rem; border-radius: .2rem; }
+#sync {
+  font-size: .8125rem; color: var(--muted); margin-bottom: 1rem; min-height: 1.2em;
+}
+#sync.bad { color: var(--stale); }
 """
 
-JS = """
+JS_CORE = """
 const list = document.getElementById('list');
 const tabs = document.querySelectorAll('.tab');
 const sortSel = document.getElementById('sort');
@@ -102,6 +126,16 @@ function num(el, key, fallback) {
   return (v === undefined || v === '') ? fallback : Number(v);
 }
 
+function counts() {
+  const c = {new: 0, seen: 0, applied: 0, dismissed: 0};
+  Array.from(list.children).forEach(j => { c[j.dataset.status] = (c[j.dataset.status] || 0) + 1; });
+  tabs.forEach(t => {
+    const f = t.dataset.filter;
+    const n = f === 'all' ? list.children.length : (c[f] || 0);
+    t.textContent = t.dataset.label + ' (' + n + ')';
+  });
+}
+
 function render() {
   tabs.forEach(t => t.setAttribute('aria-selected', String(t.dataset.filter === filter)));
   const jobs = Array.from(list.children);
@@ -110,7 +144,7 @@ function render() {
     if (mode === 'score') return num(b, 'score', -1) - num(a, 'score', -1);
     if (mode === 'found') return num(b, 'found', 0) - num(a, 'found', 0);
     if (mode === 'oldest') return num(a, 'posted', 9e15) - num(b, 'posted', 9e15);
-    return num(b, 'posted', -1) - num(a, 'posted', -1);   // newest posted
+    return num(b, 'posted', -1) - num(a, 'posted', -1);
   });
   let shown = 0;
   jobs.forEach(j => {
@@ -120,6 +154,7 @@ function render() {
     list.appendChild(j);
   });
   document.getElementById('empty').style.display = shown ? 'none' : '';
+  counts();
 }
 
 tabs.forEach(t => t.addEventListener('click', () => { filter = t.dataset.filter; render(); }));
@@ -129,7 +164,74 @@ document.querySelectorAll('.ref').forEach(r => r.addEventListener('click', () =>
   const original = r.textContent; r.textContent = 'copied';
   setTimeout(() => { r.textContent = original; }, 900);
 }));
-render();
+"""
+
+JS_SYNC = """
+const API = %(api)s;
+const sync = document.getElementById('sync');
+
+function setCardStatus(card, status) {
+  card.dataset.status = status;
+  card.querySelectorAll('.mark').forEach(b =>
+    b.setAttribute('aria-pressed', String(b.dataset.set === status)));
+}
+
+function getKey(force) {
+  let k = localStorage.getItem('board_key');
+  if (!k || force) {
+    k = window.prompt('Board key (set as BOARD_KEY in Vercel):') || '';
+    if (k) localStorage.setItem('board_key', k.trim());
+  }
+  return (k || '').trim();
+}
+
+async function api(method, body) {
+  const key = getKey(false);
+  if (!key) throw new Error('no key');
+  const resp = await fetch(API, {
+    method,
+    headers: {'Content-Type': 'application/json', 'X-Board-Key': key},
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (resp.status === 401) { localStorage.removeItem('board_key'); throw new Error('key rejected'); }
+  if (!resp.ok) throw new Error('HTTP ' + resp.status);
+  return resp.json();
+}
+
+async function loadStatuses() {
+  sync.className = ''; sync.textContent = 'Syncing statuses...';
+  try {
+    const data = await api('GET');
+    Array.from(list.children).forEach(card => {
+      setCardStatus(card, data[card.dataset.ref] || 'new');
+    });
+    render();
+    sync.textContent = 'Synced. Marks are shared across your devices.';
+  } catch (err) {
+    sync.className = 'bad';
+    sync.textContent = 'Not synced (' + err.message + '). Marks below are from the last run.';
+  }
+}
+
+list.addEventListener('click', async (ev) => {
+  const btn = ev.target.closest('.mark');
+  if (!btn) return;
+  const card = btn.closest('.job');
+  const prev = card.dataset.status;
+  const next = btn.dataset.set;
+  setCardStatus(card, next);          // optimistic
+  counts();
+  try {
+    await api('POST', {ref: card.dataset.ref, status: next});
+    sync.className = ''; sync.textContent = 'Saved.';
+  } catch (err) {
+    setCardStatus(card, prev);        // roll back so the page never lies
+    counts();
+    sync.className = 'bad'; sync.textContent = 'Could not save (' + err.message + ').';
+  }
+});
+
+loadStatuses();
 """
 
 
@@ -169,11 +271,21 @@ def _age_label(posted: Optional[str]) -> str:
     return f'<span class="stale">{label}</span>' if days >= 180 else label
 
 
-def _job_card(job: dict) -> str:
+def _marks(current: str) -> str:
+    buttons = "".join(
+        f'<button class="mark" data-set="{key}" '
+        f'aria-pressed="{"true" if key == current else "false"}">{_e(label)}</button>'
+        for key, label in STATUS_LABEL.items()
+    )
+    return f'<div class="marks">{buttons}</div>'
+
+
+def _job_card(job: dict, marking: bool) -> str:
     ref = job["dedup_key"][:8]
     tier = job.get("tier") or "primary"
     classes = "job stretch" if tier == "stretch" else "job"
     posted = job.get("posted_at")
+    status = job.get("status") or "new"
 
     bits = []
     if job.get("score") is not None:
@@ -183,7 +295,8 @@ def _job_card(job: dict) -> str:
         bits.append(f'<span class="badge">{_e(label)}</span>')
     if tier == "stretch":
         bits.append('<span class="badge warm">worth a look</span>')
-    bits.append(f'<span class="badge">{_e(STATUS_LABEL.get(job.get("status"), "New"))}</span>')
+    if not marking:
+        bits.append(f'<span class="badge">{_e(STATUS_LABEL.get(status, "New"))}</span>')
     bits.append(f'<span class="ref" data-ref="{_e(ref)}" title="click to copy">{_e(ref)}</span>')
 
     meta = [_e(job["company"])]
@@ -196,7 +309,8 @@ def _job_card(job: dict) -> str:
     elif job.get("first_seen"):
         meta.append(f'found {_e(job["first_seen"][:10])}')
 
-    attrs = (f'data-status="{_e(job.get("status") or "new")}"'
+    attrs = (f'data-ref="{_e(ref)}"'
+             f' data-status="{_e(status)}"'
              f' data-posted="{_epoch(posted)}"'
              f' data-found="{_epoch(job.get("first_seen"))}"'
              f' data-score="{job["score"] if job.get("score") is not None else ""}"')
@@ -211,22 +325,42 @@ def _job_card(job: dict) -> str:
         parts.append(f'  <div class="reason">{_e(job["reason"])}</div>')
     if job.get("hook"):
         parts.append(f'  <div class="hook">{_e(job["hook"])}</div>')
+    if marking:
+        parts.append("  " + _marks(status))
     parts.append("</article>")
     return "\n".join(parts)
 
 
 def render(jobs: List[dict], counts: dict[str, int]) -> str:
+    api = (config.CFG.get("board", {}) or {}).get("status_api", "") or ""
+    marking = bool(api)
     total = len(jobs)
-    tabs = [("new", f"New ({counts.get('new', 0)})"),
-            ("seen", f"Seen ({counts.get('seen', 0)})"),
-            ("applied", f"Applied ({counts.get('applied', 0)})"),
-            ("dismissed", f"Dismissed ({counts.get('dismissed', 0)})"),
-            ("all", f"All ({total})")]
+
+    tab_defs = [("new", "New"), ("seen", "Seen"), ("applied", "Applied"),
+                ("dismissed", "Dismissed"), ("all", "All")]
     tab_html = "\n".join(
-        f'<button class="tab" data-filter="{k}" aria-selected="false">{_e(v)}</button>'
-        for k, v in tabs)
-    cards = "\n".join(_job_card(j) for j in jobs)
+        f'<button class="tab" data-filter="{k}" data-label="{_e(label)}" '
+        f'aria-selected="false">{_e(label)} '
+        f'({total if k == "all" else counts.get(k, 0)})</button>'
+        for k, label in tab_defs)
+
+    cards = "\n".join(_job_card(j, marking) for j in jobs)
     dated = sum(1 for j in jobs if j.get("posted_at"))
+
+    sync_bar = '<div id="sync"></div>' if marking else ""
+    js = JS_CORE + ("\nrender();\n" if not marking else "")
+    if marking:
+        js += JS_SYNC % {"api": json.dumps(api)}
+
+    if marking:
+        footer = ("Tap <b>New / Seen / Applied / Dismissed</b> on any job. Marks are "
+                  "stored centrally, so a change on your phone shows up on either "
+                  "laptop. The board asks for the key once per device.")
+    else:
+        footer = ("Change a status with the short reference: "
+                  "<code>py mark.py &lt;ref&gt; applied</code> &mdash; click a reference "
+                  "to copy it. Set <code>board.status_api</code> in config.yaml to mark "
+                  "from the page instead.")
 
     return f"""<!doctype html>
 <html lang="en">
@@ -242,6 +376,7 @@ def render(jobs: List[dict], counts: dict[str, int]) -> str:
   <div class="sub">Every job the bot has ever matched. Nothing is removed here -
     the Telegram digest shows only what is new, this shows everything.
     Posting dates known for {dated} of {total}.</div>
+  {sync_bar}
   <div class="controls">
     <div class="tabs">{tab_html}</div>
     <label class="sortbox">Sort
@@ -258,14 +393,12 @@ def render(jobs: List[dict], counts: dict[str, int]) -> str:
   </div>
   <div class="empty" id="empty" style="display:none">Nothing in this category.</div>
   <footer>
-    Change a status with the short reference:
-    <code>py mark.py &lt;ref&gt; applied</code> &mdash; click a reference to copy it.
-    Valid statuses: new, seen, applied, dismissed.
+    {footer}
     Roles open 6 months or more are flagged in red: usually evergreen reqs
     rather than live openings.
   </footer>
 </div>
-<script>{JS}</script>
+<script>{js}</script>
 </body>
 </html>
 """
