@@ -261,7 +261,12 @@ them. Every addition is a git commit either way.
 
 ## Sharing the board with someone else
 
-Append the key as a URL parameter and the link configures itself:
+The short way - the Vercel project's bare domain redirects to the board with
+the key attached, which is what you give someone typing it on a phone:
+
+    job-search-bot-rho.vercel.app
+
+The long way, equivalent, if you would rather send a direct link:
 
     https://<you>.github.io/job-board/?key=<BOARD_KEY>
 
