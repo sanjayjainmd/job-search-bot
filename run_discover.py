@@ -65,8 +65,11 @@ def main() -> int:
 
     sources = [
         ("ats", lambda: ats.fetch_all(config.COMPANIES)),
-        ("directories", directories.fetch_all),
     ]
+    # directories.fetch_all is a stub and always returns nothing, which makes
+    # the canary warn on every run. A permanent false alarm teaches you to
+    # ignore warnings, so it is not registered until it actually does something.
+    _ = directories
     if apify.enabled():
         sources.append(("apify", apify.fetch_all))
 

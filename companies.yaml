@@ -40,6 +40,39 @@ companies:
   - { name: "Nebius",        ats: greenhouse, slug: nebius }            # 357
   - { name: "Vast.ai",       ats: ashby,      slug: vastai }            # 14
 
+  # --- Series A/B and earlier, added 2026-08-23 -------------------------------
+  # Verified live; the number is open roles at the time of checking, which is
+  # also what the small-company rule reads. These are the companies where the
+  # finance function is one or two people and a "Head of Finance" posting means
+  # first finance hire rather than executive.
+  - { name: "Chroma",         ats: ashby,      slug: trychroma }      # 1
+  - { name: "Weaviate",       ats: ashby,      slug: weaviate }       # 1
+  - { name: "Turbopuffer",    ats: ashby,      slug: turbopuffer }    # 4
+  - { name: "Comet",          ats: greenhouse, slug: comet }          # 4
+  - { name: "Onyx Security",  ats: ashby,      slug: onyx }           # 4
+  - { name: "Inference.net",  ats: ashby,      slug: inference }      # 5
+  - { name: "SF Compute",     ats: ashby,      slug: sfcompute }      # 7
+  - { name: "Foundry",        ats: greenhouse, slug: foundry }        # 8
+  - { name: "Browserbase",    ats: ashby,      slug: browserbase }    # 9
+  - { name: "Labelbox",       ats: greenhouse, slug: labelbox }       # 9
+  - { name: "LanceDB",        ats: ashby,      slug: lancedb }        # 10
+  - { name: "E2B",            ats: ashby,      slug: e2b }            # 11
+  - { name: "Zilliz",         ats: lever,      slug: zilliz }         # 12
+  - { name: "Galileo",        ats: greenhouse, slug: galileo }        # 12
+  - { name: "HiddenLayer",    ats: greenhouse, slug: hiddenlayer }    # 12
+  - { name: "LlamaIndex",     ats: ashby,      slug: llamaindex }     # 15
+  - { name: "Braintrust",     ats: ashby,      slug: braintrust }     # 24
+  - { name: "Arize AI",       ats: greenhouse, slug: arizeai }        # 27
+  - { name: "MatX",           ats: ashby,      slug: matx }           # 37
+  - { name: "d-Matrix",       ats: ashby,      slug: d-matrix }       # 39
+  # Larger, kept because they are core AI-infrastructure employers
+  - { name: "Snorkel AI",     ats: greenhouse, slug: snorkelai }      # 42
+  - { name: "Lightning AI",   ats: greenhouse, slug: lightningai }    # 50
+  - { name: "Mercor",         ats: ashby,      slug: mercor }         # 89
+  - { name: "Etched",         ats: ashby,      slug: etched }         # 106
+  - { name: "Fluidstack",     ats: ashby,      slug: fluidstack }     # 259
+  - { name: "Crusoe",         ats: ashby,      slug: crusoe }         # 370
+
 # No public ATS board found for these — they use a custom careers page or a
 # board type this bot does not speak. Left here so nobody re-guesses them:
 #   Replicate, Groq, Modular, Weights & Biases
