@@ -147,4 +147,4 @@ board:
   # Leave blank and the board is read-only, with status changed via mark.py.
   # Set it and you can tap New / Seen / Applied / Dismissed on the page itself,
   # from a phone or either laptop, with the marks shared between them.
-  status_api: ""
+  status_api: "https://job-search-bot-rho.vercel.app/api/status"
