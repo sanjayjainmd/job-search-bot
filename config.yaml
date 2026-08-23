@@ -12,11 +12,31 @@ profile:
 
 targets:
   # Used to build search queries and to sanity-check job locations.
+  # Matched as substrings against the posting's location text. Companies write
+  # the Bay Area many different ways ("Sunnyvale Office", "San Jose Office
+  # (First St)"), so list the cities, not just the metro name.
   locations:
     - "San Francisco"
     - "San Francisco Bay Area"
+    - "Bay Area"
+    - "San Jose"
+    - "Sunnyvale"
+    - "Palo Alto"
+    - "Mountain View"
+    - "Menlo Park"
+    - "Redwood City"
+    - "Santa Clara"
+    - "San Mateo"
+    - "Burlingame"
+    - "Cupertino"
+    - "Fremont"
+    - "Oakland"
+    - "Berkeley"
+    - "Emeryville"
   remote_ok: true          # set false to require Bay Area presence
-  location_is_hard_filter: false   # true = drop anything outside the list above
+  # true = drop anything outside the list above (blank locations still pass,
+  # so the LLM can judge them rather than losing them silently).
+  location_is_hard_filter: true
 
   # A company with at most this many open roles counts as small. 40 is roughly
   # a sub-150-person company. Raise it to be more permissive about senior
