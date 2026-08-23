@@ -35,6 +35,8 @@ def _ensure_columns(conn: sqlite3.Connection) -> None:
             "ALTER TABLE seen_jobs ADD COLUMN status TEXT NOT NULL DEFAULT 'new'")
     if "tier" not in cols:
         conn.execute("ALTER TABLE seen_jobs ADD COLUMN tier TEXT")
+    if "posted_at" not in cols:
+        conn.execute("ALTER TABLE seen_jobs ADD COLUMN posted_at TEXT")
 
 
 def init_db(path: Path | None = None) -> None:
@@ -98,13 +100,15 @@ def record_job(job: Job, notified: bool) -> None:
             """
             INSERT OR IGNORE INTO seen_jobs
                 (dedup_key, title, company, url, location, source,
-                 score, fit, reason, hook, first_seen, notified, status, tier)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                 score, fit, reason, hook, first_seen, notified, status, tier,
+                 posted_at)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             """,
             (
                 job.dedup_key, job.title, job.company, job.url, job.location,
                 job.source, job.score, job.fit, job.reason, job.hook,
                 _now(), int(notified), "new", job.meta.get("tier", "primary"),
+                job.posted_at,
             ),
         )
         conn.commit()
@@ -144,7 +148,7 @@ def all_jobs() -> List[dict]:
     with closing(connect()) as conn:
         rows = conn.execute(
             "SELECT * FROM seen_jobs ORDER BY"
-            " (score IS NULL), score DESC, first_seen DESC"
+            " (posted_at IS NULL), posted_at DESC, first_seen DESC"
         ).fetchall()
     return [dict(r) for r in rows]
 

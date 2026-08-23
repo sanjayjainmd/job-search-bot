@@ -11,7 +11,7 @@ from typing import List, Optional, Tuple
 
 import requests
 
-from ..models import Job
+from ..models import Job, normalise_date
 
 TIMEOUT = 25
 HEADERS = {"User-Agent": "personal-job-search-bot/0.1"}
@@ -49,6 +49,8 @@ def _greenhouse(name: str, slug: str) -> Optional[List[Job]]:
             location=(item.get("location") or {}).get("name", ""),
             description=_strip_html(item.get("content", "")),
             source="greenhouse",
+            posted_at=normalise_date(item.get("first_published")
+                                     or item.get("updated_at")),
         ).clean())
     return jobs
 
@@ -69,6 +71,7 @@ def _lever(name: str, slug: str) -> Optional[List[Job]]:
                 item.get("descriptionPlain") or item.get("description", "")
             ),
             source="lever",
+            posted_at=normalise_date(item.get("createdAt")),
         ).clean())
     return jobs
 
@@ -88,6 +91,7 @@ def _ashby(name: str, slug: str) -> Optional[List[Job]]:
                 item.get("descriptionPlain") or item.get("descriptionHtml", "")
             ),
             source="ashby",
+            posted_at=normalise_date(item.get("publishedAt")),
         ).clean())
     return jobs
 

@@ -9,7 +9,7 @@ from __future__ import annotations
 from typing import List, Tuple
 
 from .. import config
-from ..models import Job
+from ..models import Job, normalise_date
 
 
 def available() -> bool:
@@ -66,6 +66,7 @@ def fetch_all() -> Tuple[List[Job], List[str]]:
                 location=val("location"),
                 description=val("description"),
                 source=val("site") or "jobspy",
+                posted_at=normalise_date(val("date_posted")),
             ).clean())
 
     return jobs, errors

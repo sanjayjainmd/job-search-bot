@@ -133,6 +133,15 @@ It is regenerated on every run and committed to the repo, so `git pull` and
 open it in a browser. Filter tabs: New / Seen / Applied / Dismissed / All.
 Stretch-tier ("worth a look") jobs are tinted.
 
+Sort by **newest posted**, **oldest posted**, **best score** or **recently
+found**. Posted dates are the real ones from the ATS - Greenhouse
+`first_published`, Lever `createdAt`, Ashby `publishedAt`, jobspy
+`date_posted` - not the date the bot happened to notice the job.
+
+Anything open 6 months or more is flagged in red. Those are usually evergreen
+reqs a company leaves permanently open, not live openings, and they are worth
+treating differently from something posted last week.
+
 Status is changed from the command line, because a static page cannot write
 back to the database and a server would be overkill for one user:
 

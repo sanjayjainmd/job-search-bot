@@ -8,20 +8,19 @@
 :root {
   --bg: #ffffff; --fg: #1a1a1a; --muted: #666; --line: #e2e2e2;
   --card: #fafafa; --accent: #1a56db; --badge: #eef2ff; --badge-fg: #3730a3;
-  --stretch: #fff7ed; --stretch-fg: #9a3412;
+  --stretch: #fff7ed; --stretch-fg: #9a3412; --stale: #b91c1c;
 }
-:root:not([data-theme="light"]) { }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #14161a; --fg: #e8e8e8; --muted: #9aa0a6; --line: #2c2f36;
     --card: #1b1e24; --accent: #7aa2f7; --badge: #232a45; --badge-fg: #a5b4fc;
-    --stretch: #2d2114; --stretch-fg: #fbbf24;
+    --stretch: #2d2114; --stretch-fg: #fbbf24; --stale: #f87171;
   }
 }
 :root[data-theme="dark"] {
   --bg: #14161a; --fg: #e8e8e8; --muted: #9aa0a6; --line: #2c2f36;
   --card: #1b1e24; --accent: #7aa2f7; --badge: #232a45; --badge-fg: #a5b4fc;
-  --stretch: #2d2114; --stretch-fg: #fbbf24;
+  --stretch: #2d2114; --stretch-fg: #fbbf24; --stale: #f87171;
 }
 * { box-sizing: border-box; }
 body {
@@ -30,13 +29,20 @@ body {
 }
 .wrap { max-width: 60rem; margin: 0 auto; }
 h1 { font-size: 1.4rem; margin: 0 0 .25rem; }
-.sub { color: var(--muted); font-size: .875rem; margin-bottom: 1.5rem; }
-.tabs { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.5rem; }
+.sub { color: var(--muted); font-size: .875rem; margin-bottom: 1.25rem; }
+.controls { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;
+            margin-bottom: 1.5rem; }
+.tabs { display: flex; flex-wrap: wrap; gap: .5rem; }
 .tab {
   border: 1px solid var(--line); background: var(--card); color: var(--fg);
   padding: .4rem .8rem; border-radius: 999px; cursor: pointer; font-size: .875rem;
 }
 .tab[aria-selected="true"] { background: var(--accent); color: #fff; border-color: var(--accent); }
+.sortbox { margin-left: auto; font-size: .875rem; color: var(--muted); }
+select {
+  background: var(--card); color: var(--fg); border: 1px solid var(--line);
+  border-radius: .35rem; padding: .35rem .5rem; font-size: .875rem;
+}
 .job {
   border: 1px solid var(--line); background: var(--card); border-radius: .5rem;
   padding: .9rem 1rem; margin-bottom: .75rem;
@@ -52,6 +58,7 @@ h1 { font-size: 1.4rem; margin: 0 0 .25rem; }
   padding: .1rem .45rem; font-size: .75rem; font-weight: 600;
 }
 .badge.warm { background: var(--stretch); color: var(--stretch-fg); }
+.stale { color: var(--stale); font-weight: 600; }
 .ref {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .75rem;
   color: var(--muted); cursor: pointer; border: 1px dashed var(--line);
@@ -69,664 +76,698 @@ code { background: var(--badge); padding: .1rem .3rem; border-radius: .2rem; }
 <div class="wrap">
   <h1>Job Board</h1>
   <div class="sub">Every job the bot has ever matched. Nothing is removed here -
-    the Telegram digest shows only what is new, this shows everything.</div>
-  <div class="tabs"><button class="tab" data-filter="new" aria-selected="false">New (124)</button>
+    the Telegram digest shows only what is new, this shows everything.
+    Posting dates known for 125 of 125.</div>
+  <div class="controls">
+    <div class="tabs"><button class="tab" data-filter="new" aria-selected="false">New (125)</button>
 <button class="tab" data-filter="seen" aria-selected="false">Seen (0)</button>
-<button class="tab" data-filter="applied" aria-selected="false">Applied (1)</button>
+<button class="tab" data-filter="applied" aria-selected="false">Applied (0)</button>
 <button class="tab" data-filter="dismissed" aria-selected="false">Dismissed (0)</button>
 <button class="tab" data-filter="all" aria-selected="false">All (125)</button></div>
-  <article class="job stretch" data-status="applied">
-  <h2><a href="https://job-boards.greenhouse.io/togetherai/jobs/5210729007" target="_blank" rel="noopener">Director of Technical Accounting</a></h2>
-  <div class="meta">Together AI &middot; San Francisco &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">Applied</span><span class="ref" data-ref="0b240c1d" title="click to copy">0b240c1d</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/togetherai/jobs/5212018007" target="_blank" rel="noopener">Strategic Finance Senior Associate - Compute</a></h2>
-  <div class="meta">Together AI &middot; San Francisco &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="ddead537" title="click to copy">ddead537</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/togetherai/jobs/5210933007" target="_blank" rel="noopener">Strategic Finance Senior Associate - Revenue</a></h2>
-  <div class="meta">Together AI &middot; San Francisco &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="b1ede0b3" title="click to copy">b1ede0b3</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/baseten/71a011b6-0f17-4c0a-b0ba-38deffce1adb" target="_blank" rel="noopener">Strategic Finance Associate / Sr. Associate</a></h2>
-  <div class="meta">Baseten &middot; San Francisco &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="0246cc5b" title="click to copy">0246cc5b</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/baseten/3677992a-2a97-4a55-98ce-e2719922f263" target="_blank" rel="noopener">Strategic Finance, GTM</a></h2>
-  <div class="meta">Baseten &middot; San Francisco &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="ee07c3b2" title="click to copy">ee07c3b2</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/baseten/9eb05eb7-75a8-415c-8370-a10005c0d2cc" target="_blank" rel="noopener">Revenue Accounting Manager</a></h2>
-  <div class="meta">Baseten &middot; San Francisco &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="1d1800d0" title="click to copy">1d1800d0</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/modal/225b43d8-ef14-4082-b16e-005c74b42957" target="_blank" rel="noopener">Business Operations Manager</a></h2>
-  <div class="meta">Modal &middot; New York &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="d86d03cc" title="click to copy">d86d03cc</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/modal/5ac02bd3-a7ac-4e3d-b9c2-cc1abede0ae3" target="_blank" rel="noopener">VP, Finance</a></h2>
-  <div class="meta">Modal &middot; New York &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="184026f8" title="click to copy">184026f8</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/modal/a5d0e0e2-8d15-491d-9169-64be23f62034" target="_blank" rel="noopener">Revenue Operations</a></h2>
-  <div class="meta">Modal &middot; San Francisco &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="7cd3dec0" title="click to copy">7cd3dec0</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/cerebras/b5dd4ace-f660-441e-a65e-e599536a7341" target="_blank" rel="noopener">Manager, Business Operations</a></h2>
-  <div class="meta">Cerebras &middot; Headquarters/Sunnyvale Office &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="7ce0b838" title="click to copy">7ce0b838</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/cerebras/2c786281-e51c-4d2d-a760-2ef907d81760" target="_blank" rel="noopener">Director, Strategic Finance - Corporate FP&amp;A</a></h2>
-  <div class="meta">Cerebras &middot; Headquarters/Sunnyvale Office &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="b11b940b" title="click to copy">b11b940b</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/cerebras/ea0a48cf-8c1d-444c-9a69-a5e100c311e6" target="_blank" rel="noopener">Senior Accountant</a></h2>
-  <div class="meta">Cerebras &middot; Headquarters/Sunnyvale Office &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="3e94cf41" title="click to copy">3e94cf41</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/cerebras/522004b6-8ac2-445c-969f-d33035fef794" target="_blank" rel="noopener">Accounting Manager</a></h2>
-  <div class="meta">Cerebras &middot; Headquarters/Sunnyvale Office &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="048aee97" title="click to copy">048aee97</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://sambanova.ai/sambanova-available-positions/?gh_jid=6133780004" target="_blank" rel="noopener">Director - Technical Accounting &amp; General Ledger</a></h2>
-  <div class="meta">SambaNova &middot; San Jose, California, United States &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="11dab3b9" title="click to copy">11dab3b9</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://sambanova.ai/sambanova-available-positions/?gh_jid=5962667004" target="_blank" rel="noopener">Global Accountant</a></h2>
-  <div class="meta">SambaNova &middot; Bengaluru, Karnataka, India &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="55500128" title="click to copy">55500128</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/lambda/8216a47e-d8d4-44b6-b1f8-6d5b0120b1eb" target="_blank" rel="noopener">Senior Manager, Revenue Technical Accounting</a></h2>
-  <div class="meta">Lambda &middot; San Jose Office (First St) &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="341af1ae" title="click to copy">341af1ae</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/lambda/f75558dd-c1d6-49ee-933d-47fa71963ebe" target="_blank" rel="noopener">Senior Accountant - Fixed Assets</a></h2>
-  <div class="meta">Lambda &middot; San Jose Office (First St) &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="84c9a5c1" title="click to copy">84c9a5c1</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/lambda/698f2617-e44c-4b3a-a8cd-9b7e38923932" target="_blank" rel="noopener">Senior Finance Systems Architect (Bangalore, India)</a></h2>
-  <div class="meta">Lambda &middot; Bangalore, India &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="213b6d40" title="click to copy">213b6d40</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/lambda/2c19c63d-5dd6-4b0a-a2af-5713da13d9c8" target="_blank" rel="noopener">Data Center Development &amp; Infrastructure Finance Lead</a></h2>
-  <div class="meta">Lambda &middot; San Francisco Office (Fremont St) &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="fc225bfa" title="click to copy">fc225bfa</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/lambda/e01d8efc-4538-4616-8b42-d1bce63809df" target="_blank" rel="noopener">Senior Corporate FP&amp;A Analyst</a></h2>
-  <div class="meta">Lambda &middot; San Francisco Office (Fremont St) &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="c6944bc0" title="click to copy">c6944bc0</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/lambda/a7643768-bb94-4441-9295-64fefe233811" target="_blank" rel="noopener">Senior Analyst - Capital Markets &amp; Corporate Development</a></h2>
-  <div class="meta">Lambda &middot; San Francisco Office (Second St) &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="d6076fda" title="click to copy">d6076fda</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/lambda/136b1ac1-3b3d-4bd3-8881-de201cd7c19c" target="_blank" rel="noopener">Head of Consolidation Accounting</a></h2>
-  <div class="meta">Lambda &middot; San Jose Office (First St) &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="8a79de71" title="click to copy">8a79de71</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/lambda/20738542-164f-45b6-a822-f54c11b5fc60" target="_blank" rel="noopener">Corporate Development Associate - Digital Infrastructure M&amp;A</a></h2>
-  <div class="meta">Lambda &middot; San Francisco Office (Second St) &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="e8a53fe8" title="click to copy">e8a53fe8</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/lambda/f0d8b975-8abe-41eb-bd42-b87d7b23a954" target="_blank" rel="noopener">Senior Auditor - Finance and Operations</a></h2>
-  <div class="meta">Lambda &middot; San Jose Office (First St) &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="cf523cd9" title="click to copy">cf523cd9</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/lambda/8311101a-2871-48ac-8b3d-dd055ad23098" target="_blank" rel="noopener">Internal Audit Lead - Finance &amp; Operations</a></h2>
-  <div class="meta">Lambda &middot; San Jose Office (First St) &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="464b569a" title="click to copy">464b569a</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/lambda/e0f23169-bd46-4f9b-9391-a044124a11b9" target="_blank" rel="noopener">Technical Accounting/SEC Reporting Lead</a></h2>
-  <div class="meta">Lambda &middot; San Jose Office (First St) &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="01a73e4b" title="click to copy">01a73e4b</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/lambda/45420498-0c3f-438e-a127-8438c7a342fa" target="_blank" rel="noopener">Senior FP&amp;A Analyst - Public Cloud</a></h2>
-  <div class="meta">Lambda &middot; San Francisco Office (Fremont St) &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="6bcedd63" title="click to copy">6bcedd63</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://coreweave.com/careers/job?4687145006&amp;board=coreweave&amp;gh_jid=4687145006" target="_blank" rel="noopener">Account Solution Architect - Financial Services</a></h2>
-  <div class="meta">CoreWeave &middot; New York, NY &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="0be35091" title="click to copy">0be35091</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://coreweave.com/careers/job?4686050006&amp;board=coreweave&amp;gh_jid=4686050006" target="_blank" rel="noopener">Analyst, Strategic Finance &amp; Corporate FP&amp;A</a></h2>
-  <div class="meta">CoreWeave &middot; Sunnyvale, CA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="777ea1fb" title="click to copy">777ea1fb</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://coreweave.com/careers/job?4660868006&amp;board=coreweave&amp;gh_jid=4660868006" target="_blank" rel="noopener">Corporate Development Associate</a></h2>
-  <div class="meta">CoreWeave &middot; Livingston, NJ / New York, NY / Sunnyvale, CA / Bellevue, WA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="9ef0f5f0" title="click to copy">9ef0f5f0</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://coreweave.com/careers/job?4655467006&amp;board=coreweave&amp;gh_jid=4655467006" target="_blank" rel="noopener">Director, Operations Accounting Enablement - Fixed Assets</a></h2>
-  <div class="meta">CoreWeave &middot; Dallas, TX &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="898fcddb" title="click to copy">898fcddb</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://coreweave.com/careers/job?4689526006&amp;board=coreweave&amp;gh_jid=4689526006" target="_blank" rel="noopener">Director, Operations Accounting - Supply Chain</a></h2>
-  <div class="meta">CoreWeave &middot; Dallas, TX &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="f6fc6ba7" title="click to copy">f6fc6ba7</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://coreweave.com/careers/job?4692714006&amp;board=coreweave&amp;gh_jid=4692714006" target="_blank" rel="noopener">Finance Analyst, Capacity Finance</a></h2>
-  <div class="meta">CoreWeave &middot; New York, NY / Sunnyvale, CA / Bellevue, WA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="d4539f7d" title="click to copy">d4539f7d</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://coreweave.com/careers/job?4701270006&amp;board=coreweave&amp;gh_jid=4701270006" target="_blank" rel="noopener">Finance Manager</a></h2>
-  <div class="meta">CoreWeave &middot; Livingston, NJ / New York, NY / Sunnyvale, CA / Bellevue, WA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="2f8d59f6" title="click to copy">2f8d59f6</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://coreweave.com/careers/job?4706642006&amp;board=coreweave&amp;gh_jid=4706642006" target="_blank" rel="noopener">Finance Manager - GPU Capacity Planning</a></h2>
-  <div class="meta">CoreWeave &middot; Livingston, NJ / New York, NY / Sunnyvale, CA / San Francisco, CA / Bellevue, WA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="c61db68f" title="click to copy">c61db68f</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://coreweave.com/careers/job?4680062006&amp;board=coreweave&amp;gh_jid=4680062006" target="_blank" rel="noopener">Manager, Corporate Development (M &amp; A) Accounting</a></h2>
-  <div class="meta">CoreWeave &middot; New York, NY / Sunnyvale, CA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="d12d1ef4" title="click to copy">d12d1ef4</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://coreweave.com/careers/job?4666800006&amp;board=coreweave&amp;gh_jid=4666800006" target="_blank" rel="noopener">Manager, Data Center Operations Accounting</a></h2>
-  <div class="meta">CoreWeave &middot; Dallas, TX &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="25678724" title="click to copy">25678724</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://coreweave.com/careers/job?4703808006&amp;board=coreweave&amp;gh_jid=4703808006" target="_blank" rel="noopener">Operations Accounting - Inventory Manager</a></h2>
-  <div class="meta">CoreWeave &middot; Dallas, TX &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="ddf6a6e5" title="click to copy">ddf6a6e5</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://coreweave.com/careers/job?4679718006&amp;board=coreweave&amp;gh_jid=4679718006" target="_blank" rel="noopener">Product Manager, Finance</a></h2>
-  <div class="meta">CoreWeave &middot; Livingston, NJ / New York, NY / Sunnyvale, CA / San Francisco, CA / Bellevue, WA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="cae21c1d" title="click to copy">cae21c1d</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://coreweave.com/careers/job?4689202006&amp;board=coreweave&amp;gh_jid=4689202006" target="_blank" rel="noopener">Revenue Accounting Manager</a></h2>
-  <div class="meta">CoreWeave &middot; Sunnyvale, CA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="2eb0c3ca" title="click to copy">2eb0c3ca</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://coreweave.com/careers/job?4693203006&amp;board=coreweave&amp;gh_jid=4693203006" target="_blank" rel="noopener">Senior Accountant, Accounts Payable</a></h2>
-  <div class="meta">CoreWeave &middot; Dallas, TX &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="4e83d52b" title="click to copy">4e83d52b</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://coreweave.com/careers/job?4702204006&amp;board=coreweave&amp;gh_jid=4702204006" target="_blank" rel="noopener">Senior Accountant, Debt Accounting</a></h2>
-  <div class="meta">CoreWeave &middot; Dallas, TX &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="db57184f" title="click to copy">db57184f</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://coreweave.com/careers/job?4696710006&amp;board=coreweave&amp;gh_jid=4696710006" target="_blank" rel="noopener">Senior Accountant - Leases</a></h2>
-  <div class="meta">CoreWeave &middot; Dallas, TX &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="9bee9487" title="click to copy">9bee9487</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://coreweave.com/careers/job?4687417006&amp;board=coreweave&amp;gh_jid=4687417006" target="_blank" rel="noopener">Senior Associate, SEC Reporting &amp; Technical Accounting</a></h2>
-  <div class="meta">CoreWeave &middot; Dallas, TX &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="46d2cfef" title="click to copy">46d2cfef</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://coreweave.com/careers/job?4661606006&amp;board=coreweave&amp;gh_jid=4661606006" target="_blank" rel="noopener">Senior Manager, Operations Accounting Data Center Infrastructure</a></h2>
-  <div class="meta">CoreWeave &middot; Dallas, TX &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="51807d2f" title="click to copy">51807d2f</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://coreweave.com/careers/job?4689227006&amp;board=coreweave&amp;gh_jid=4689227006" target="_blank" rel="noopener">Senior Manager, Operations Accounting - Fixed Assets</a></h2>
-  <div class="meta">CoreWeave &middot; Dallas, TX &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="97ab6b3b" title="click to copy">97ab6b3b</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://coreweave.com/careers/job?4702199006&amp;board=coreweave&amp;gh_jid=4702199006" target="_blank" rel="noopener">Senior Manager, Technical Accounting</a></h2>
-  <div class="meta">CoreWeave &middot; Dallas, TX / New York, NY / Seattle, WA / Sunnyvale, CA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="67bb26a9" title="click to copy">67bb26a9</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://coreweave.com/careers/job?4698102006&amp;board=coreweave&amp;gh_jid=4698102006" target="_blank" rel="noopener">Senior Manager, Treasury Operations</a></h2>
-  <div class="meta">CoreWeave &middot; New York, NY / Sunnyvale, CA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="cfa4a409" title="click to copy">cfa4a409</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://coreweave.com/careers/job?4696696006&amp;board=coreweave&amp;gh_jid=4696696006" target="_blank" rel="noopener">Senior Treasury Analyst</a></h2>
-  <div class="meta">CoreWeave &middot; New York, NY &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="f97e7049" title="click to copy">f97e7049</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://coreweave.com/careers/job?4680206006&amp;board=coreweave&amp;gh_jid=4680206006" target="_blank" rel="noopener">Strategic Treasury Manager</a></h2>
-  <div class="meta">CoreWeave &middot; New York, NY &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="cacee4f5" title="click to copy">cacee4f5</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/scaleai/jobs/4725451005" target="_blank" rel="noopener">Enterprise Deal Desk &amp; Pricing Analyst</a></h2>
-  <div class="meta">Scale AI &middot; San Francisco, CA; New York, NY &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="59411b4b" title="click to copy">59411b4b</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/scaleai/jobs/4613327005" target="_blank" rel="noopener">Finance Fellow - Human Frontier Collective (UK)</a></h2>
-  <div class="meta">Scale AI &middot; United Kingdom &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="766f9f3c" title="click to copy">766f9f3c</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/scaleai/jobs/4565836005" target="_blank" rel="noopener">Finance Fellow - Human Frontier Collective (US)</a></h2>
-  <div class="meta">Scale AI &middot; United States &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="0b83a7b9" title="click to copy">0b83a7b9</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/scaleai/jobs/4688021005" target="_blank" rel="noopener">Finance Systems &amp; Automations Manager</a></h2>
-  <div class="meta">Scale AI &middot; San Francisco, CA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="7b73c5d1" title="click to copy">7b73c5d1</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/scaleai/jobs/4663533005" target="_blank" rel="noopener">Senior Accountant</a></h2>
-  <div class="meta">Scale AI &middot; San Francisco, CA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="7832ffdc" title="click to copy">7832ffdc</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/scaleai/jobs/4611776005" target="_blank" rel="noopener">Senior AI Product Manager, Finance Agents</a></h2>
-  <div class="meta">Scale AI &middot; San Francisco, CA; New York, NY &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="5636c3da" title="click to copy">5636c3da</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/scaleai/jobs/4722944005" target="_blank" rel="noopener">Strategic Finance Manager, Corporate</a></h2>
-  <div class="meta">Scale AI &middot; San Francisco, CA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="4923ff3d" title="click to copy">4923ff3d</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/deepgram/2baf2ee6-3cb2-4d86-9623-165a959be79f" target="_blank" rel="noopener">Director, Technical Accounting &amp; Financial Reporting</a></h2>
-  <div class="meta">Deepgram &middot; USA | Remote &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="e73bcf55" title="click to copy">e73bcf55</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/deepgram/072271ea-2006-47af-8c4f-e8f9e54daa11" target="_blank" rel="noopener">Senior Director, Accounting</a></h2>
-  <div class="meta">Deepgram &middot; USA | Remote &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="b0c9a056" title="click to copy">b0c9a056</span></div>
-</article>
-<article class="job" data-status="new">
+    <label class="sortbox">Sort
+      <select id="sort">
+        <option value="posted">newest posted</option>
+        <option value="oldest">oldest posted</option>
+        <option value="score">best score</option>
+        <option value="found">recently found</option>
+      </select>
+    </label>
+  </div>
+  <div id="list">
+<article class="job" data-status="new" data-posted="1787284800" data-found="1787457600" data-score="">
   <h2><a href="https://jobs.ashbyhq.com/deepgram/17a6e0f9-6db3-4e68-b02c-2cf7318dd442" target="_blank" rel="noopener">Accounting Manager, GL&amp; Close</a></h2>
-  <div class="meta">Deepgram &middot; USA | Remote &middot; ashby &middot; found 2026-08-23</div>
+  <div class="meta">Deepgram &middot; USA | Remote &middot; ashby &middot; posted 2d ago</div>
   <div class="row"><span class="badge">New</span><span class="ref" data-ref="2dd81cf5" title="click to copy">2dd81cf5</span></div>
 </article>
-<article class="job" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/elevenlabs/33e129a4-b818-4563-932c-719ce49d138a" target="_blank" rel="noopener">Finance &amp; Strategy</a></h2>
-  <div class="meta">ElevenLabs &middot; United States &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="270168b5" title="click to copy">270168b5</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/elevenlabs/eed3d392-bab8-4fb9-a038-adeb991b5b5a" target="_blank" rel="noopener">Financial Accounting</a></h2>
-  <div class="meta">ElevenLabs &middot; New York &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="25f8f296" title="click to copy">25f8f296</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/perplexity/2e1ee70c-b070-4ccc-a2bf-8b394161bbde" target="_blank" rel="noopener">Strategic Finance Lead - Core</a></h2>
-  <div class="meta">Perplexity &middot; San Francisco &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="b6cd73b8" title="click to copy">b6cd73b8</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/perplexity/31dfcb60-a0df-4983-b3a4-d653cdc0aa8f" target="_blank" rel="noopener">AI Strategist, Financial Services</a></h2>
-  <div class="meta">Perplexity &middot; San Francisco &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="2507c424" title="click to copy">2507c424</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/perplexity/03f8f956-1cb3-4945-81d1-73b7ff048d4e" target="_blank" rel="noopener">Revenue Operations Analyst</a></h2>
-  <div class="meta">Perplexity &middot; San Francisco &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="035de832" title="click to copy">035de832</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/sierra/39e15cc4-a16e-4ddb-b609-a345e2dd67c8" target="_blank" rel="noopener">Pricing Strategy and Operations</a></h2>
-  <div class="meta">Sierra &middot; San Francisco, CA &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="adbbee69" title="click to copy">adbbee69</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/sierra/cf34359f-1ac3-4eda-aa96-acbdf87fbc3b" target="_blank" rel="noopener">Enterprise Sales Director, Financial Services</a></h2>
-  <div class="meta">Sierra &middot; US - Remote &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="8465dbb7" title="click to copy">8465dbb7</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/sierra/2a76bb97-2719-413c-94ad-775553e63abd" target="_blank" rel="noopener">Strategist, Agent Development - Financial Services</a></h2>
-  <div class="meta">Sierra &middot; San Francisco, CA &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="743ecfaa" title="click to copy">743ecfaa</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/sierra/3935e2a4-eb85-44dd-8e50-1443402bc2b4" target="_blank" rel="noopener">Pricing Strategy &amp; Operations</a></h2>
-  <div class="meta">Sierra &middot; London &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="fc1c555f" title="click to copy">fc1c555f</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/sierra/c94ac723-75ca-49c9-9b1e-af590be4cd65" target="_blank" rel="noopener">Accounting Lead</a></h2>
-  <div class="meta">Sierra &middot; San Francisco, CA &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="0df33981" title="click to copy">0df33981</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8604614002" target="_blank" rel="noopener">Accounting Manager</a></h2>
-  <div class="meta">Databricks &middot; San Francisco, California &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="417ddf1e" title="click to copy">417ddf1e</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8604598002" target="_blank" rel="noopener">Data and AI Lead, Finance</a></h2>
-  <div class="meta">Databricks &middot; Bengaluru, India &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="26a9bcf0" title="click to copy">26a9bcf0</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8442976002" target="_blank" rel="noopener">Delivery Solutions Architect - Financial Services</a></h2>
-  <div class="meta">Databricks &middot; Georgia; Illinois; Massachusetts; New York; North Carolina; Washington, D.C. &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="f5d1eb10" title="click to copy">f5d1eb10</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8415095002" target="_blank" rel="noopener">Director, Finance PMO, Strategy &amp; Operations, FP&amp;A</a></h2>
-  <div class="meta">Databricks &middot; Bellevue, Washington; Denver, Colorado; Mountain View, California; San Francisco, California; Seattle, Washington &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="3e49f70d" title="click to copy">3e49f70d</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8569608002" target="_blank" rel="noopener">Director, Lakebase Sales Specialist- Financial Services</a></h2>
-  <div class="meta">Databricks &middot; New York City, New York &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="f568a983" title="click to copy">f568a983</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8182383002" target="_blank" rel="noopener">Finance Manager</a></h2>
-  <div class="meta">Databricks &middot; Mountain View, California; San Francisco, California &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="2114465d" title="click to copy">2114465d</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8501026002" target="_blank" rel="noopener">Head of EMEA Financial Services GTM</a></h2>
-  <div class="meta">Databricks &middot; London, United Kingdom &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="5751fb99" title="click to copy">5751fb99</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8569479002" target="_blank" rel="noopener">Lakebase Associate Director- Financial Services</a></h2>
-  <div class="meta">Databricks &middot; United States &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="34142cfe" title="click to copy">34142cfe</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8337425002" target="_blank" rel="noopener">Manager, International Statutory &amp; Technical Accounting</a></h2>
-  <div class="meta">Databricks &middot; London, United Kingdom &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="ee5aa21e" title="click to copy">ee5aa21e</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8604589002" target="_blank" rel="noopener">Manager, Payroll Accounting</a></h2>
-  <div class="meta">Databricks &middot; Bengaluru, India &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="c21c97f5" title="click to copy">c21c97f5</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8604579002" target="_blank" rel="noopener">Senior Finance Specialist (Data &amp; AI)</a></h2>
-  <div class="meta">Databricks &middot; Bengaluru, India &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="59fbb9db" title="click to copy">59fbb9db</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8414474002" target="_blank" rel="noopener">Senior Financial Analyst</a></h2>
-  <div class="meta">Databricks &middot; Bellevue, Washington; Mountain View, California; San Francisco, California; Seattle, Washington &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="81128046" title="click to copy">81128046</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8604577002" target="_blank" rel="noopener">Senior Manager, Finance Data and AI</a></h2>
-  <div class="meta">Databricks &middot; Bengaluru, India &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="4695f65a" title="click to copy">4695f65a</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8604591002" target="_blank" rel="noopener">Senior Payroll Accountant</a></h2>
-  <div class="meta">Databricks &middot; Bengaluru, India &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="be93a8de" title="click to copy">be93a8de</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8604468002" target="_blank" rel="noopener">Solutions Architect - Financial Services</a></h2>
-  <div class="meta">Databricks &middot; Georgia; Illinois; Massachusetts; New York; Washington, D.C. &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="f5ca1755" title="click to copy">f5ca1755</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8605158002" target="_blank" rel="noopener">Solutions Architect - Financial Services (Asset and Wealth Management)</a></h2>
-  <div class="meta">Databricks &middot; Chicago, Illinois; Massachusetts; New Jersey; New York &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="ad903a86" title="click to copy">ad903a86</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8637768002" target="_blank" rel="noopener">Solutions Architect - Financial Services (Banking and Payments)</a></h2>
-  <div class="meta">Databricks &middot; Chicago, Illinois; Dallas, Texas; Denver, Colorado; Los Angeles, California; Portland, Oregon; San Francisco, California; Seattle, Washington &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="6f4487fd" title="click to copy">6f4487fd</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8502991002" target="_blank" rel="noopener">Solutions Architect - Financial Services (Professional Services)</a></h2>
-  <div class="meta">Databricks &middot; Illinois; Massachusetts; New Jersey; New York; Washington, D.C. &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="98b3e87c" title="click to copy">98b3e87c</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8604605002" target="_blank" rel="noopener">Sr. Accounting Manager - Close &amp; Consolidations</a></h2>
-  <div class="meta">Databricks &middot; San Francisco, California &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="e7e45870" title="click to copy">e7e45870</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8604596002" target="_blank" rel="noopener">Sr. Manager, Finance PMO &amp; Operations (Procure-To-Pay)</a></h2>
-  <div class="meta">Databricks &middot; West Coast - United States &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="3a62405f" title="click to copy">3a62405f</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8567976002" target="_blank" rel="noopener">Sr. Solutions Architect - Financial Services (Fintech / Data Providers)</a></h2>
-  <div class="meta">Databricks &middot; Georgia; Massachusetts; New York; North Carolina; Washington, D.C. &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="e91d1a2c" title="click to copy">e91d1a2c</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8568013002" target="_blank" rel="noopener">Sr. Solutions Architect - Financial Services (Strategic Banking)</a></h2>
-  <div class="meta">Databricks &middot; Georgia; Massachusetts; New York; North Carolina &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="1b61c047" title="click to copy">1b61c047</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8604608002" target="_blank" rel="noopener">Technical Accounting Manager</a></h2>
-  <div class="meta">Databricks &middot; Bengaluru, India &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="f5f2201e" title="click to copy">f5f2201e</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://careers.nebius.com/?gh_jid=4952276101" target="_blank" rel="noopener">Budget Controller</a></h2>
-  <div class="meta">Nebius &middot; Amsterdam, Netherlands &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="e997ccd5" title="click to copy">e997ccd5</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://careers.nebius.com/?gh_jid=4823935101" target="_blank" rel="noopener">Corporate Development Associate</a></h2>
-  <div class="meta">Nebius &middot; London, United Kingdom &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="01bfeeda" title="click to copy">01bfeeda</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://careers.nebius.com/?gh_jid=4885428101" target="_blank" rel="noopener">Corporate Development Manager - Capital Markets</a></h2>
-  <div class="meta">Nebius &middot; London, United Kingdom &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="e49c2763" title="click to copy">e49c2763</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://careers.nebius.com/?gh_jid=4902513101" target="_blank" rel="noopener">Director, Pricing</a></h2>
-  <div class="meta">Nebius &middot; Remote &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="efd4532a" title="click to copy">efd4532a</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://careers.nebius.com/?gh_jid=4953386101" target="_blank" rel="noopener">Financial Controller</a></h2>
-  <div class="meta">Nebius &middot; United States &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="ff802734" title="click to copy">ff802734</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://careers.nebius.com/?gh_jid=4924057101" target="_blank" rel="noopener">Senior FP&amp;A Analyst</a></h2>
-  <div class="meta">Nebius &middot; Amsterdam, Netherlands &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="19abe3d0" title="click to copy">19abe3d0</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://careers.nebius.com/?gh_jid=4904723101" target="_blank" rel="noopener">Senior Revenue Controller</a></h2>
-  <div class="meta">Nebius &middot; Amsterdam, Netherlands &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="811190b2" title="click to copy">811190b2</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://jobs.ashbyhq.com/vastai/cc00eb4f-3003-4c78-9a1b-ff607a95ce93" target="_blank" rel="noopener">Controller</a></h2>
-  <div class="meta">Vast.ai &middot; Los Angeles &middot; ashby &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="d2315058" title="click to copy">d2315058</span></div>
-</article>
-<article class="job" data-status="new">
+<article class="job" data-status="new" data-posted="1787198400" data-found="1787457600" data-score="">
   <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5205545008" target="_blank" rel="noopener">Accounting, Revenue Internal Controls</a></h2>
-  <div class="meta">Anthropic &middot; San Francisco, CA | Seattle, WA &middot; greenhouse &middot; found 2026-08-23</div>
+  <div class="meta">Anthropic &middot; San Francisco, CA | Seattle, WA &middot; greenhouse &middot; posted 3d ago</div>
   <div class="row"><span class="badge">New</span><span class="ref" data-ref="35865cc2" title="click to copy">35865cc2</span></div>
 </article>
-<article class="job" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5358112008" target="_blank" rel="noopener">Cash Manager, Treasury</a></h2>
-  <div class="meta">Anthropic &middot; San Francisco, CA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="3e8bdf1a" title="click to copy">3e8bdf1a</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5184585008" target="_blank" rel="noopener">Data Science, Finance &amp; Strategy</a></h2>
-  <div class="meta">Anthropic &middot; San Francisco, CA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="5f0dfd13" title="click to copy">5f0dfd13</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5196219008" target="_blank" rel="noopener">Director, Infrastructure &amp; Energy Accounting</a></h2>
-  <div class="meta">Anthropic &middot; San Francisco, CA | Seattle, WA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="be255435" title="click to copy">be255435</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5318977008" target="_blank" rel="noopener">Director, Infrastructure Supply Chain Accounting</a></h2>
-  <div class="meta">Anthropic &middot; San Francisco, CA | New York City, NY &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="312c45cd" title="click to copy">312c45cd</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5076754008" target="_blank" rel="noopener">Director, Revenue Accounting</a></h2>
-  <div class="meta">Anthropic &middot; San Francisco, CA | Seattle, WA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="30766477" title="click to copy">30766477</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5358098008" target="_blank" rel="noopener">Finance &amp; Strategy, Compute</a></h2>
-  <div class="meta">Anthropic &middot; San Francisco, CA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="5d5b44fe" title="click to copy">5d5b44fe</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5358090008" target="_blank" rel="noopener">Finance &amp; Strategy, Deal Strategy</a></h2>
-  <div class="meta">Anthropic &middot; San Francisco, CA | New York City, NY &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="7855241c" title="click to copy">7855241c</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5386793008" target="_blank" rel="noopener">Finance &amp; Strategy, Deal Velocity</a></h2>
-  <div class="meta">Anthropic &middot; San Francisco, CA | New York City, NY &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="ef13c803" title="click to copy">ef13c803</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5079133008" target="_blank" rel="noopener">Finance &amp; Strategy, GTM - Korea</a></h2>
-  <div class="meta">Anthropic &middot; Seoul, South Korea &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="da6a9bd9" title="click to copy">da6a9bd9</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5358088008" target="_blank" rel="noopener">Finance &amp; Strategy, Machines</a></h2>
-  <div class="meta">Anthropic &middot; San Francisco, CA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="f701b70a" title="click to copy">f701b70a</span></div>
-</article>
-<article class="job" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5197562008" target="_blank" rel="noopener">Finance &amp; Strategy Manager, Machines</a></h2>
-  <div class="meta">Anthropic &middot; San Francisco, CA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="9fa46977" title="click to copy">9fa46977</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5191636008" target="_blank" rel="noopener">Head of APAC Accounting</a></h2>
-  <div class="meta">Anthropic &middot; Singapore &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="cc29216b" title="click to copy">cc29216b</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5365524008" target="_blank" rel="noopener">Head of Revenue Accounting - Deal Desk &amp; Technical Accounting</a></h2>
-  <div class="meta">Anthropic &middot; San Francisco, CA | New York City, NY | Seattle, WA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="b28b493b" title="click to copy">b28b493b</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5250426008" target="_blank" rel="noopener">Head of Treasury Strategy &amp; Transformation</a></h2>
-  <div class="meta">Anthropic &middot; Remote-Friendly (Travel Required) | San Francisco, CA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="1827c35b" title="click to copy">1827c35b</span></div>
-</article>
-<article class="job" data-status="new">
+<article class="job" data-status="new" data-posted="1787198400" data-found="1787457600" data-score="">
   <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5390894008" target="_blank" rel="noopener">Manager Applied AI Architecture, Financial Services</a></h2>
-  <div class="meta">Anthropic &middot; New York City, NY; San Francisco, CA | New York City, NY &middot; greenhouse &middot; found 2026-08-23</div>
+  <div class="meta">Anthropic &middot; New York City, NY; San Francisco, CA | New York City, NY &middot; greenhouse &middot; posted 3d ago</div>
   <div class="row"><span class="badge">New</span><span class="ref" data-ref="239abd4f" title="click to copy">239abd4f</span></div>
 </article>
-<article class="job" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5357961008" target="_blank" rel="noopener">Manager, Infrastructure Capex Accounting</a></h2>
-  <div class="meta">Anthropic &middot; San Francisco, CA | Seattle, WA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="3947cb27" title="click to copy">3947cb27</span></div>
+<article class="job" data-status="new" data-posted="1787112000" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/scaleai/jobs/4725451005" target="_blank" rel="noopener">Enterprise Deal Desk &amp; Pricing Analyst</a></h2>
+  <div class="meta">Scale AI &middot; San Francisco, CA; New York, NY &middot; greenhouse &middot; posted 4d ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="59411b4b" title="click to copy">59411b4b</span></div>
 </article>
-<article class="job" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5391211008" target="_blank" rel="noopener">Partnerships Business Operations Manager</a></h2>
-  <div class="meta">Anthropic &middot; San Francisco, CA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge">New</span><span class="ref" data-ref="4fb3c6e5" title="click to copy">4fb3c6e5</span></div>
+<article class="job" data-status="new" data-posted="1787112000" data-found="1787457600" data-score="">
+  <h2><a href="https://careers.nebius.com/?gh_jid=4953386101" target="_blank" rel="noopener">Financial Controller</a></h2>
+  <div class="meta">Nebius &middot; United States &middot; greenhouse &middot; posted 4d ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="ff802734" title="click to copy">ff802734</span></div>
 </article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/4991194008" target="_blank" rel="noopener">Senior Business Systems Analyst, Finance Systems</a></h2>
-  <div class="meta">Anthropic &middot; San Francisco, CA | Seattle, WA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="f9cc700c" title="click to copy">f9cc700c</span></div>
+<article class="job stretch" data-status="new" data-posted="1787112000" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5318977008" target="_blank" rel="noopener">Director, Infrastructure Supply Chain Accounting</a></h2>
+  <div class="meta">Anthropic &middot; San Francisco, CA | New York City, NY &middot; greenhouse &middot; posted 4d ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="312c45cd" title="click to copy">312c45cd</span></div>
 </article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5301883008" target="_blank" rel="noopener">Senior Business Systems Analyst, Finance Systems (Assets &amp; Lease Management)</a></h2>
-  <div class="meta">Anthropic &middot; San Francisco, CA | Seattle, WA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="e0ccf025" title="click to copy">e0ccf025</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5365762008" target="_blank" rel="noopener">Senior Manager, Finance Systems - Treasury</a></h2>
-  <div class="meta">Anthropic &middot; San Francisco, CA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="cb18a83f" title="click to copy">cb18a83f</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5248494008" target="_blank" rel="noopener">Senior Manager, Financial Reporting</a></h2>
-  <div class="meta">Anthropic &middot; San Francisco, CA | Seattle, WA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="01c64819" title="click to copy">01c64819</span></div>
-</article>
-<article class="job stretch" data-status="new">
-  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/4989155008" target="_blank" rel="noopener">Senior Manager, Technical Accounting - M&amp;A and Investments</a></h2>
-  <div class="meta">Anthropic &middot; San Francisco, CA | Seattle, WA &middot; greenhouse &middot; found 2026-08-23</div>
-  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="4715b6a1" title="click to copy">4715b6a1</span></div>
-</article>
-<article class="job" data-status="new">
+<article class="job" data-status="new" data-posted="1787112000" data-found="1787457600" data-score="">
   <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5390964008" target="_blank" rel="noopener">Technical Program Manager, Revenue Operations</a></h2>
-  <div class="meta">Anthropic &middot; Remote-Friendly (Travel-Required) | San Francisco, CA | Seattle, WA | New York City, NY &middot; greenhouse &middot; found 2026-08-23</div>
+  <div class="meta">Anthropic &middot; Remote-Friendly (Travel-Required) | San Francisco, CA | Seattle, WA | New York City, NY &middot; greenhouse &middot; posted 4d ago</div>
   <div class="row"><span class="badge">New</span><span class="ref" data-ref="329ac6f0" title="click to copy">329ac6f0</span></div>
 </article>
+<article class="job" data-status="new" data-posted="1787112000" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/cerebras/522004b6-8ac2-445c-969f-d33035fef794" target="_blank" rel="noopener">Accounting Manager</a></h2>
+  <div class="meta">Cerebras &middot; Headquarters/Sunnyvale Office &middot; ashby &middot; posted 4d ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="048aee97" title="click to copy">048aee97</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1787112000" data-found="1787457600" data-score="">
+  <h2><a href="https://coreweave.com/careers/job?4706642006&amp;board=coreweave&amp;gh_jid=4706642006" target="_blank" rel="noopener">Finance Manager - GPU Capacity Planning</a></h2>
+  <div class="meta">CoreWeave &middot; Livingston, NJ / New York, NY / Sunnyvale, CA / San Francisco, CA / Bellevue, WA &middot; greenhouse &middot; posted 4d ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="c61db68f" title="click to copy">c61db68f</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1787025600" data-found="1787457600" data-score="">
+  <h2><a href="https://careers.nebius.com/?gh_jid=4952276101" target="_blank" rel="noopener">Budget Controller</a></h2>
+  <div class="meta">Nebius &middot; Amsterdam, Netherlands &middot; greenhouse &middot; posted 5d ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="e997ccd5" title="click to copy">e997ccd5</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1787025600" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/baseten/9eb05eb7-75a8-415c-8370-a10005c0d2cc" target="_blank" rel="noopener">Revenue Accounting Manager</a></h2>
+  <div class="meta">Baseten &middot; San Francisco &middot; ashby &middot; posted 5d ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="1d1800d0" title="click to copy">1d1800d0</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1786939200" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/togetherai/jobs/5212018007" target="_blank" rel="noopener">Strategic Finance Senior Associate - Compute</a></h2>
+  <div class="meta">Together AI &middot; San Francisco &middot; greenhouse &middot; posted 6d ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="ddead537" title="click to copy">ddead537</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1786680000" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/scaleai/jobs/4722944005" target="_blank" rel="noopener">Strategic Finance Manager, Corporate</a></h2>
+  <div class="meta">Scale AI &middot; San Francisco, CA &middot; greenhouse &middot; posted 9d ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="4923ff3d" title="click to copy">4923ff3d</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1786680000" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5391211008" target="_blank" rel="noopener">Partnerships Business Operations Manager</a></h2>
+  <div class="meta">Anthropic &middot; San Francisco, CA &middot; greenhouse &middot; posted 9d ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="4fb3c6e5" title="click to copy">4fb3c6e5</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1786680000" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/lambda/45420498-0c3f-438e-a127-8438c7a342fa" target="_blank" rel="noopener">Senior FP&amp;A Analyst - Public Cloud</a></h2>
+  <div class="meta">Lambda &middot; San Francisco Office (Fremont St) &middot; ashby &middot; posted 9d ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="6bcedd63" title="click to copy">6bcedd63</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1786593600" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5358098008" target="_blank" rel="noopener">Finance &amp; Strategy, Compute</a></h2>
+  <div class="meta">Anthropic &middot; San Francisco, CA &middot; greenhouse &middot; posted 10d ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="5d5b44fe" title="click to copy">5d5b44fe</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1786593600" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5358088008" target="_blank" rel="noopener">Finance &amp; Strategy, Machines</a></h2>
+  <div class="meta">Anthropic &middot; San Francisco, CA &middot; greenhouse &middot; posted 10d ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="f701b70a" title="click to copy">f701b70a</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1786593600" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5197562008" target="_blank" rel="noopener">Finance &amp; Strategy Manager, Machines</a></h2>
+  <div class="meta">Anthropic &middot; San Francisco, CA &middot; greenhouse &middot; posted 10d ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="9fa46977" title="click to copy">9fa46977</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1786593600" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/togetherai/jobs/5210729007" target="_blank" rel="noopener">Director of Technical Accounting</a></h2>
+  <div class="meta">Together AI &middot; San Francisco &middot; greenhouse &middot; posted 10d ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="0b240c1d" title="click to copy">0b240c1d</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1786593600" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/togetherai/jobs/5210933007" target="_blank" rel="noopener">Strategic Finance Senior Associate - Revenue</a></h2>
+  <div class="meta">Together AI &middot; San Francisco &middot; greenhouse &middot; posted 10d ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="b1ede0b3" title="click to copy">b1ede0b3</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1786507200" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/lambda/e0f23169-bd46-4f9b-9391-a044124a11b9" target="_blank" rel="noopener">Technical Accounting/SEC Reporting Lead</a></h2>
+  <div class="meta">Lambda &middot; San Jose Office (First St) &middot; ashby &middot; posted 11d ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="01a73e4b" title="click to copy">01a73e4b</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1786420800" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5386793008" target="_blank" rel="noopener">Finance &amp; Strategy, Deal Velocity</a></h2>
+  <div class="meta">Anthropic &middot; San Francisco, CA | New York City, NY &middot; greenhouse &middot; posted 12d ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="ef13c803" title="click to copy">ef13c803</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1786420800" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5357961008" target="_blank" rel="noopener">Manager, Infrastructure Capex Accounting</a></h2>
+  <div class="meta">Anthropic &middot; San Francisco, CA | Seattle, WA &middot; greenhouse &middot; posted 12d ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="3947cb27" title="click to copy">3947cb27</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1786420800" data-found="1787457600" data-score="">
+  <h2><a href="https://coreweave.com/careers/job?4703808006&amp;board=coreweave&amp;gh_jid=4703808006" target="_blank" rel="noopener">Operations Accounting - Inventory Manager</a></h2>
+  <div class="meta">CoreWeave &middot; Dallas, TX &middot; greenhouse &middot; posted 12d ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="ddf6a6e5" title="click to copy">ddf6a6e5</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1786334400" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5358090008" target="_blank" rel="noopener">Finance &amp; Strategy, Deal Strategy</a></h2>
+  <div class="meta">Anthropic &middot; San Francisco, CA | New York City, NY &middot; greenhouse &middot; posted 13d ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="7855241c" title="click to copy">7855241c</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1785988800" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/perplexity/03f8f956-1cb3-4945-81d1-73b7ff048d4e" target="_blank" rel="noopener">Revenue Operations Analyst</a></h2>
+  <div class="meta">Perplexity &middot; San Francisco &middot; ashby &middot; posted 17d ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="035de832" title="click to copy">035de832</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1785902400" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/sierra/39e15cc4-a16e-4ddb-b609-a345e2dd67c8" target="_blank" rel="noopener">Pricing Strategy and Operations</a></h2>
+  <div class="meta">Sierra &middot; San Francisco, CA &middot; ashby &middot; posted 18d ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="adbbee69" title="click to copy">adbbee69</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1785902400" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/sierra/cf34359f-1ac3-4eda-aa96-acbdf87fbc3b" target="_blank" rel="noopener">Enterprise Sales Director, Financial Services</a></h2>
+  <div class="meta">Sierra &middot; US - Remote &middot; ashby &middot; posted 18d ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="8465dbb7" title="click to copy">8465dbb7</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1785902400" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/vastai/cc00eb4f-3003-4c78-9a1b-ff607a95ce93" target="_blank" rel="noopener">Controller</a></h2>
+  <div class="meta">Vast.ai &middot; Los Angeles &middot; ashby &middot; posted 18d ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="d2315058" title="click to copy">d2315058</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1785816000" data-found="1787457600" data-score="">
+  <h2><a href="https://coreweave.com/careers/job?4702199006&amp;board=coreweave&amp;gh_jid=4702199006" target="_blank" rel="noopener">Senior Manager, Technical Accounting</a></h2>
+  <div class="meta">CoreWeave &middot; Dallas, TX / New York, NY / Seattle, WA / Sunnyvale, CA &middot; greenhouse &middot; posted 19d ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="67bb26a9" title="click to copy">67bb26a9</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1785816000" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/lambda/8311101a-2871-48ac-8b3d-dd055ad23098" target="_blank" rel="noopener">Internal Audit Lead - Finance &amp; Operations</a></h2>
+  <div class="meta">Lambda &middot; San Jose Office (First St) &middot; ashby &middot; posted 19d ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="464b569a" title="click to copy">464b569a</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1785816000" data-found="1787457600" data-score="">
+  <h2><a href="https://coreweave.com/careers/job?4702204006&amp;board=coreweave&amp;gh_jid=4702204006" target="_blank" rel="noopener">Senior Accountant, Debt Accounting</a></h2>
+  <div class="meta">CoreWeave &middot; Dallas, TX &middot; greenhouse &middot; posted 19d ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="db57184f" title="click to copy">db57184f</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1785729600" data-found="1787457600" data-score="">
+  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8568013002" target="_blank" rel="noopener">Sr. Solutions Architect - Financial Services (Strategic Banking)</a></h2>
+  <div class="meta">Databricks &middot; Georgia; Massachusetts; New York; North Carolina &middot; greenhouse &middot; posted 20d ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="1b61c047" title="click to copy">1b61c047</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1785729600" data-found="1787457600" data-score="">
+  <h2><a href="https://sambanova.ai/sambanova-available-positions/?gh_jid=6133780004" target="_blank" rel="noopener">Director - Technical Accounting &amp; General Ledger</a></h2>
+  <div class="meta">SambaNova &middot; San Jose, California, United States &middot; greenhouse &middot; posted 20d ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="11dab3b9" title="click to copy">11dab3b9</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1785556800" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/baseten/3677992a-2a97-4a55-98ce-e2719922f263" target="_blank" rel="noopener">Strategic Finance, GTM</a></h2>
+  <div class="meta">Baseten &middot; San Francisco &middot; ashby &middot; posted 22d ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="ee07c3b2" title="click to copy">ee07c3b2</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1785470400" data-found="1787457600" data-score="">
+  <h2><a href="https://coreweave.com/careers/job?4701270006&amp;board=coreweave&amp;gh_jid=4701270006" target="_blank" rel="noopener">Finance Manager</a></h2>
+  <div class="meta">CoreWeave &middot; Livingston, NJ / New York, NY / Sunnyvale, CA / Bellevue, WA &middot; greenhouse &middot; posted 23d ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="2f8d59f6" title="click to copy">2f8d59f6</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1785384000" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/modal/a5d0e0e2-8d15-491d-9169-64be23f62034" target="_blank" rel="noopener">Revenue Operations</a></h2>
+  <div class="meta">Modal &middot; San Francisco &middot; ashby &middot; posted 24d ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="7cd3dec0" title="click to copy">7cd3dec0</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1785297600" data-found="1787457600" data-score="">
+  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8604468002" target="_blank" rel="noopener">Solutions Architect - Financial Services</a></h2>
+  <div class="meta">Databricks &middot; Georgia; Illinois; Massachusetts; New York; Washington, D.C. &middot; greenhouse &middot; posted 25d ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="f5ca1755" title="click to copy">f5ca1755</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1785297600" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/lambda/f0d8b975-8abe-41eb-bd42-b87d7b23a954" target="_blank" rel="noopener">Senior Auditor - Finance and Operations</a></h2>
+  <div class="meta">Lambda &middot; San Jose Office (First St) &middot; ashby &middot; posted 25d ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="cf523cd9" title="click to copy">cf523cd9</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1785124800" data-found="1787457600" data-score="">
+  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8637768002" target="_blank" rel="noopener">Solutions Architect - Financial Services (Banking and Payments)</a></h2>
+  <div class="meta">Databricks &middot; Chicago, Illinois; Dallas, Texas; Denver, Colorado; Los Angeles, California; Portland, Oregon; San Francisco, California; Seattle, Washington &middot; greenhouse &middot; posted 27d ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="6f4487fd" title="click to copy">6f4487fd</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1784952000" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/lambda/136b1ac1-3b3d-4bd3-8881-de201cd7c19c" target="_blank" rel="noopener">Head of Consolidation Accounting</a></h2>
+  <div class="meta">Lambda &middot; San Jose Office (First St) &middot; ashby &middot; posted 29d ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="8a79de71" title="click to copy">8a79de71</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1784865600" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/4989155008" target="_blank" rel="noopener">Senior Manager, Technical Accounting - M&amp;A and Investments</a></h2>
+  <div class="meta">Anthropic &middot; San Francisco, CA | Seattle, WA &middot; greenhouse &middot; posted 30d ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="4715b6a1" title="click to copy">4715b6a1</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1784779200" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/perplexity/31dfcb60-a0df-4983-b3a4-d653cdc0aa8f" target="_blank" rel="noopener">AI Strategist, Financial Services</a></h2>
+  <div class="meta">Perplexity &middot; San Francisco &middot; ashby &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="2507c424" title="click to copy">2507c424</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1784692800" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/sierra/2a76bb97-2719-413c-94ad-775553e63abd" target="_blank" rel="noopener">Strategist, Agent Development - Financial Services</a></h2>
+  <div class="meta">Sierra &middot; San Francisco, CA &middot; ashby &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="743ecfaa" title="click to copy">743ecfaa</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1784692800" data-found="1787457600" data-score="">
+  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8567976002" target="_blank" rel="noopener">Sr. Solutions Architect - Financial Services (Fintech / Data Providers)</a></h2>
+  <div class="meta">Databricks &middot; Georgia; Massachusetts; New York; North Carolina; Washington, D.C. &middot; greenhouse &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="e91d1a2c" title="click to copy">e91d1a2c</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1784692800" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5365762008" target="_blank" rel="noopener">Senior Manager, Finance Systems - Treasury</a></h2>
+  <div class="meta">Anthropic &middot; San Francisco, CA &middot; greenhouse &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="cb18a83f" title="click to copy">cb18a83f</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1784606400" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5358112008" target="_blank" rel="noopener">Cash Manager, Treasury</a></h2>
+  <div class="meta">Anthropic &middot; San Francisco, CA &middot; greenhouse &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="3e8bdf1a" title="click to copy">3e8bdf1a</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1784606400" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5365524008" target="_blank" rel="noopener">Head of Revenue Accounting - Deal Desk &amp; Technical Accounting</a></h2>
+  <div class="meta">Anthropic &middot; San Francisco, CA | New York City, NY | Seattle, WA &middot; greenhouse &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="b28b493b" title="click to copy">b28b493b</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1784260800" data-found="1787457600" data-score="">
+  <h2><a href="https://coreweave.com/careers/job?4698102006&amp;board=coreweave&amp;gh_jid=4698102006" target="_blank" rel="noopener">Senior Manager, Treasury Operations</a></h2>
+  <div class="meta">CoreWeave &middot; New York, NY / Sunnyvale, CA &middot; greenhouse &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="cfa4a409" title="click to copy">cfa4a409</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1784088000" data-found="1787457600" data-score="">
+  <h2><a href="https://sambanova.ai/sambanova-available-positions/?gh_jid=5962667004" target="_blank" rel="noopener">Global Accountant</a></h2>
+  <div class="meta">SambaNova &middot; Bengaluru, Karnataka, India &middot; greenhouse &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="55500128" title="click to copy">55500128</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1784088000" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/lambda/a7643768-bb94-4441-9295-64fefe233811" target="_blank" rel="noopener">Senior Analyst - Capital Markets &amp; Corporate Development</a></h2>
+  <div class="meta">Lambda &middot; San Francisco Office (Second St) &middot; ashby &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="d6076fda" title="click to copy">d6076fda</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1784088000" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/lambda/20738542-164f-45b6-a822-f54c11b5fc60" target="_blank" rel="noopener">Corporate Development Associate - Digital Infrastructure M&amp;A</a></h2>
+  <div class="meta">Lambda &middot; San Francisco Office (Second St) &middot; ashby &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="e8a53fe8" title="click to copy">e8a53fe8</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1784001600" data-found="1787457600" data-score="">
+  <h2><a href="https://coreweave.com/careers/job?4696710006&amp;board=coreweave&amp;gh_jid=4696710006" target="_blank" rel="noopener">Senior Accountant - Leases</a></h2>
+  <div class="meta">CoreWeave &middot; Dallas, TX &middot; greenhouse &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="9bee9487" title="click to copy">9bee9487</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1783915200" data-found="1787457600" data-score="">
+  <h2><a href="https://coreweave.com/careers/job?4696696006&amp;board=coreweave&amp;gh_jid=4696696006" target="_blank" rel="noopener">Senior Treasury Analyst</a></h2>
+  <div class="meta">CoreWeave &middot; New York, NY &middot; greenhouse &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="f97e7049" title="click to copy">f97e7049</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1783915200" data-found="1787457600" data-score="">
+  <h2><a href="https://careers.nebius.com/?gh_jid=4924057101" target="_blank" rel="noopener">Senior FP&amp;A Analyst</a></h2>
+  <div class="meta">Nebius &middot; Amsterdam, Netherlands &middot; greenhouse &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="19abe3d0" title="click to copy">19abe3d0</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1783656000" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/lambda/2c19c63d-5dd6-4b0a-a2af-5713da13d9c8" target="_blank" rel="noopener">Data Center Development &amp; Infrastructure Finance Lead</a></h2>
+  <div class="meta">Lambda &middot; San Francisco Office (Fremont St) &middot; ashby &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="fc225bfa" title="click to copy">fc225bfa</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1783656000" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/lambda/e01d8efc-4538-4616-8b42-d1bce63809df" target="_blank" rel="noopener">Senior Corporate FP&amp;A Analyst</a></h2>
+  <div class="meta">Lambda &middot; San Francisco Office (Fremont St) &middot; ashby &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="c6944bc0" title="click to copy">c6944bc0</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1783569600" data-found="1787457600" data-score="">
+  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8604596002" target="_blank" rel="noopener">Sr. Manager, Finance PMO &amp; Operations (Procure-To-Pay)</a></h2>
+  <div class="meta">Databricks &middot; West Coast - United States &middot; greenhouse &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="3a62405f" title="click to copy">3a62405f</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1783569600" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/lambda/698f2617-e44c-4b3a-a8cd-9b7e38923932" target="_blank" rel="noopener">Senior Finance Systems Architect (Bangalore, India)</a></h2>
+  <div class="meta">Lambda &middot; Bangalore, India &middot; ashby &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="213b6d40" title="click to copy">213b6d40</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1783483200" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/elevenlabs/eed3d392-bab8-4fb9-a038-adeb991b5b5a" target="_blank" rel="noopener">Financial Accounting</a></h2>
+  <div class="meta">ElevenLabs &middot; New York &middot; ashby &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="25f8f296" title="click to copy">25f8f296</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1783396800" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5301883008" target="_blank" rel="noopener">Senior Business Systems Analyst, Finance Systems (Assets &amp; Lease Management)</a></h2>
+  <div class="meta">Anthropic &middot; San Francisco, CA | Seattle, WA &middot; greenhouse &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="e0ccf025" title="click to copy">e0ccf025</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1783310400" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/sierra/c94ac723-75ca-49c9-9b1e-af590be4cd65" target="_blank" rel="noopener">Accounting Lead</a></h2>
+  <div class="meta">Sierra &middot; San Francisco, CA &middot; ashby &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="0df33981" title="click to copy">0df33981</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1782878400" data-found="1787457600" data-score="">
+  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8604614002" target="_blank" rel="noopener">Accounting Manager</a></h2>
+  <div class="meta">Databricks &middot; San Francisco, California &middot; greenhouse &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="417ddf1e" title="click to copy">417ddf1e</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1782878400" data-found="1787457600" data-score="">
+  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8604598002" target="_blank" rel="noopener">Data and AI Lead, Finance</a></h2>
+  <div class="meta">Databricks &middot; Bengaluru, India &middot; greenhouse &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="26a9bcf0" title="click to copy">26a9bcf0</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1782878400" data-found="1787457600" data-score="">
+  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8604589002" target="_blank" rel="noopener">Manager, Payroll Accounting</a></h2>
+  <div class="meta">Databricks &middot; Bengaluru, India &middot; greenhouse &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="c21c97f5" title="click to copy">c21c97f5</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1782878400" data-found="1787457600" data-score="">
+  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8604579002" target="_blank" rel="noopener">Senior Finance Specialist (Data &amp; AI)</a></h2>
+  <div class="meta">Databricks &middot; Bengaluru, India &middot; greenhouse &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="59fbb9db" title="click to copy">59fbb9db</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1782878400" data-found="1787457600" data-score="">
+  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8604577002" target="_blank" rel="noopener">Senior Manager, Finance Data and AI</a></h2>
+  <div class="meta">Databricks &middot; Bengaluru, India &middot; greenhouse &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="4695f65a" title="click to copy">4695f65a</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1782878400" data-found="1787457600" data-score="">
+  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8604591002" target="_blank" rel="noopener">Senior Payroll Accountant</a></h2>
+  <div class="meta">Databricks &middot; Bengaluru, India &middot; greenhouse &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="be93a8de" title="click to copy">be93a8de</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1782878400" data-found="1787457600" data-score="">
+  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8604605002" target="_blank" rel="noopener">Sr. Accounting Manager - Close &amp; Consolidations</a></h2>
+  <div class="meta">Databricks &middot; San Francisco, California &middot; greenhouse &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="e7e45870" title="click to copy">e7e45870</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1782792000" data-found="1787457600" data-score="">
+  <h2><a href="https://coreweave.com/careers/job?4693203006&amp;board=coreweave&amp;gh_jid=4693203006" target="_blank" rel="noopener">Senior Accountant, Accounts Payable</a></h2>
+  <div class="meta">CoreWeave &middot; Dallas, TX &middot; greenhouse &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="4e83d52b" title="click to copy">4e83d52b</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1782705600" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/lambda/f75558dd-c1d6-49ee-933d-47fa71963ebe" target="_blank" rel="noopener">Senior Accountant - Fixed Assets</a></h2>
+  <div class="meta">Lambda &middot; San Jose Office (First St) &middot; ashby &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="84c9a5c1" title="click to copy">84c9a5c1</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1782705600" data-found="1787457600" data-score="">
+  <h2><a href="https://coreweave.com/careers/job?4692714006&amp;board=coreweave&amp;gh_jid=4692714006" target="_blank" rel="noopener">Finance Analyst, Capacity Finance</a></h2>
+  <div class="meta">CoreWeave &middot; New York, NY / Sunnyvale, CA / Bellevue, WA &middot; greenhouse &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="d4539f7d" title="click to copy">d4539f7d</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1782446400" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/sierra/3935e2a4-eb85-44dd-8e50-1443402bc2b4" target="_blank" rel="noopener">Pricing Strategy &amp; Operations</a></h2>
+  <div class="meta">Sierra &middot; London &middot; ashby &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="fc1c555f" title="click to copy">fc1c555f</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1782446400" data-found="1787457600" data-score="">
+  <h2><a href="https://careers.nebius.com/?gh_jid=4902513101" target="_blank" rel="noopener">Director, Pricing</a></h2>
+  <div class="meta">Nebius &middot; Remote &middot; greenhouse &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="efd4532a" title="click to copy">efd4532a</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1782360000" data-found="1787457600" data-score="">
+  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8604608002" target="_blank" rel="noopener">Technical Accounting Manager</a></h2>
+  <div class="meta">Databricks &middot; Bengaluru, India &middot; greenhouse &middot; posted 1mo ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="f5f2201e" title="click to copy">f5f2201e</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1782273600" data-found="1787457600" data-score="">
+  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8605158002" target="_blank" rel="noopener">Solutions Architect - Financial Services (Asset and Wealth Management)</a></h2>
+  <div class="meta">Databricks &middot; Chicago, Illinois; Massachusetts; New Jersey; New York &middot; greenhouse &middot; posted 2mo ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="ad903a86" title="click to copy">ad903a86</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1782100800" data-found="1787457600" data-score="">
+  <h2><a href="https://careers.nebius.com/?gh_jid=4904723101" target="_blank" rel="noopener">Senior Revenue Controller</a></h2>
+  <div class="meta">Nebius &middot; Amsterdam, Netherlands &middot; greenhouse &middot; posted 2mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="811190b2" title="click to copy">811190b2</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1781668800" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/lambda/8216a47e-d8d4-44b6-b1f8-6d5b0120b1eb" target="_blank" rel="noopener">Senior Manager, Revenue Technical Accounting</a></h2>
+  <div class="meta">Lambda &middot; San Jose Office (First St) &middot; ashby &middot; posted 2mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="341af1ae" title="click to copy">341af1ae</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1781668800" data-found="1787457600" data-score="">
+  <h2><a href="https://coreweave.com/careers/job?4689227006&amp;board=coreweave&amp;gh_jid=4689227006" target="_blank" rel="noopener">Senior Manager, Operations Accounting - Fixed Assets</a></h2>
+  <div class="meta">CoreWeave &middot; Dallas, TX &middot; greenhouse &middot; posted 2mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="97ab6b3b" title="click to copy">97ab6b3b</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1781582400" data-found="1787457600" data-score="">
+  <h2><a href="https://coreweave.com/careers/job?4689526006&amp;board=coreweave&amp;gh_jid=4689526006" target="_blank" rel="noopener">Director, Operations Accounting - Supply Chain</a></h2>
+  <div class="meta">CoreWeave &middot; Dallas, TX &middot; greenhouse &middot; posted 2mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="f6fc6ba7" title="click to copy">f6fc6ba7</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1781409600" data-found="1787457600" data-score="">
+  <h2><a href="https://coreweave.com/careers/job?4689202006&amp;board=coreweave&amp;gh_jid=4689202006" target="_blank" rel="noopener">Revenue Accounting Manager</a></h2>
+  <div class="meta">CoreWeave &middot; Sunnyvale, CA &middot; greenhouse &middot; posted 2mo ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="2eb0c3ca" title="click to copy">2eb0c3ca</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1781150400" data-found="1787457600" data-score="">
+  <h2><a href="https://careers.nebius.com/?gh_jid=4885428101" target="_blank" rel="noopener">Corporate Development Manager - Capital Markets</a></h2>
+  <div class="meta">Nebius &middot; London, United Kingdom &middot; greenhouse &middot; posted 2mo ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="e49c2763" title="click to copy">e49c2763</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1780891200" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/perplexity/2e1ee70c-b070-4ccc-a2bf-8b394161bbde" target="_blank" rel="noopener">Strategic Finance Lead - Core</a></h2>
+  <div class="meta">Perplexity &middot; San Francisco &middot; ashby &middot; posted 2mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="b6cd73b8" title="click to copy">b6cd73b8</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1780891200" data-found="1787457600" data-score="">
+  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8569608002" target="_blank" rel="noopener">Director, Lakebase Sales Specialist- Financial Services</a></h2>
+  <div class="meta">Databricks &middot; New York City, New York &middot; greenhouse &middot; posted 2mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="f568a983" title="click to copy">f568a983</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1780891200" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5250426008" target="_blank" rel="noopener">Head of Treasury Strategy &amp; Transformation</a></h2>
+  <div class="meta">Anthropic &middot; Remote-Friendly (Travel Required) | San Francisco, CA &middot; greenhouse &middot; posted 2mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="1827c35b" title="click to copy">1827c35b</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1780891200" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/baseten/71a011b6-0f17-4c0a-b0ba-38deffce1adb" target="_blank" rel="noopener">Strategic Finance Associate / Sr. Associate</a></h2>
+  <div class="meta">Baseten &middot; San Francisco &middot; ashby &middot; posted 2mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="0246cc5b" title="click to copy">0246cc5b</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1780891200" data-found="1787457600" data-score="">
+  <h2><a href="https://coreweave.com/careers/job?4687145006&amp;board=coreweave&amp;gh_jid=4687145006" target="_blank" rel="noopener">Account Solution Architect - Financial Services</a></h2>
+  <div class="meta">CoreWeave &middot; New York, NY &middot; greenhouse &middot; posted 2mo ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="0be35091" title="click to copy">0be35091</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1780891200" data-found="1787457600" data-score="">
+  <h2><a href="https://coreweave.com/careers/job?4687417006&amp;board=coreweave&amp;gh_jid=4687417006" target="_blank" rel="noopener">Senior Associate, SEC Reporting &amp; Technical Accounting</a></h2>
+  <div class="meta">CoreWeave &middot; Dallas, TX &middot; greenhouse &middot; posted 2mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="46d2cfef" title="click to copy">46d2cfef</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1780545600" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5248494008" target="_blank" rel="noopener">Senior Manager, Financial Reporting</a></h2>
+  <div class="meta">Anthropic &middot; San Francisco, CA | Seattle, WA &middot; greenhouse &middot; posted 2mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="01c64819" title="click to copy">01c64819</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1780459200" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/deepgram/072271ea-2006-47af-8c4f-e8f9e54daa11" target="_blank" rel="noopener">Senior Director, Accounting</a></h2>
+  <div class="meta">Deepgram &middot; USA | Remote &middot; ashby &middot; posted 2mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="b0c9a056" title="click to copy">b0c9a056</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1780459200" data-found="1787457600" data-score="">
+  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8569479002" target="_blank" rel="noopener">Lakebase Associate Director- Financial Services</a></h2>
+  <div class="meta">Databricks &middot; United States &middot; greenhouse &middot; posted 2mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="34142cfe" title="click to copy">34142cfe</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1780372800" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5191636008" target="_blank" rel="noopener">Head of APAC Accounting</a></h2>
+  <div class="meta">Anthropic &middot; Singapore &middot; greenhouse &middot; posted 2mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="cc29216b" title="click to copy">cc29216b</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1780372800" data-found="1787457600" data-score="">
+  <h2><a href="https://coreweave.com/careers/job?4686050006&amp;board=coreweave&amp;gh_jid=4686050006" target="_blank" rel="noopener">Analyst, Strategic Finance &amp; Corporate FP&amp;A</a></h2>
+  <div class="meta">CoreWeave &middot; Sunnyvale, CA &middot; greenhouse &middot; posted 2mo ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="777ea1fb" title="click to copy">777ea1fb</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1779768000" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/cerebras/ea0a48cf-8c1d-444c-9a69-a5e100c311e6" target="_blank" rel="noopener">Senior Accountant</a></h2>
+  <div class="meta">Cerebras &middot; Headquarters/Sunnyvale Office &middot; ashby &middot; posted 2mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="3e94cf41" title="click to copy">3e94cf41</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1779336000" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/cerebras/2c786281-e51c-4d2d-a760-2ef907d81760" target="_blank" rel="noopener">Director, Strategic Finance - Corporate FP&amp;A</a></h2>
+  <div class="meta">Cerebras &middot; Headquarters/Sunnyvale Office &middot; ashby &middot; posted 3mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="b11b940b" title="click to copy">b11b940b</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1778817600" data-found="1787457600" data-score="">
+  <h2><a href="https://coreweave.com/careers/job?4680062006&amp;board=coreweave&amp;gh_jid=4680062006" target="_blank" rel="noopener">Manager, Corporate Development (M &amp; A) Accounting</a></h2>
+  <div class="meta">CoreWeave &middot; New York, NY / Sunnyvale, CA &middot; greenhouse &middot; posted 3mo ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="d12d1ef4" title="click to copy">d12d1ef4</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1778558400" data-found="1787457600" data-score="">
+  <h2><a href="https://coreweave.com/careers/job?4680206006&amp;board=coreweave&amp;gh_jid=4680206006" target="_blank" rel="noopener">Strategic Treasury Manager</a></h2>
+  <div class="meta">CoreWeave &middot; New York, NY &middot; greenhouse &middot; posted 3mo ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="cacee4f5" title="click to copy">cacee4f5</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1778558400" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/scaleai/jobs/4688021005" target="_blank" rel="noopener">Finance Systems &amp; Automations Manager</a></h2>
+  <div class="meta">Scale AI &middot; San Francisco, CA &middot; greenhouse &middot; posted 3mo ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="7b73c5d1" title="click to copy">7b73c5d1</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1778212800" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/deepgram/2baf2ee6-3cb2-4d86-9623-165a959be79f" target="_blank" rel="noopener">Director, Technical Accounting &amp; Financial Reporting</a></h2>
+  <div class="meta">Deepgram &middot; USA | Remote &middot; ashby &middot; posted 3mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="e73bcf55" title="click to copy">e73bcf55</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1778126400" data-found="1787457600" data-score="">
+  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8502991002" target="_blank" rel="noopener">Solutions Architect - Financial Services (Professional Services)</a></h2>
+  <div class="meta">Databricks &middot; Illinois; Massachusetts; New Jersey; New York; Washington, D.C. &middot; greenhouse &middot; posted 3mo ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="98b3e87c" title="click to copy">98b3e87c</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1778126400" data-found="1787457600" data-score="">
+  <h2><a href="https://coreweave.com/careers/job?4679718006&amp;board=coreweave&amp;gh_jid=4679718006" target="_blank" rel="noopener">Product Manager, Finance</a></h2>
+  <div class="meta">CoreWeave &middot; Livingston, NJ / New York, NY / Sunnyvale, CA / San Francisco, CA / Bellevue, WA &middot; greenhouse &middot; posted 3mo ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="cae21c1d" title="click to copy">cae21c1d</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1777435200" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/cerebras/b5dd4ace-f660-441e-a65e-e599536a7341" target="_blank" rel="noopener">Manager, Business Operations</a></h2>
+  <div class="meta">Cerebras &middot; Headquarters/Sunnyvale Office &middot; ashby &middot; posted 3mo ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="7ce0b838" title="click to copy">7ce0b838</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1777348800" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/elevenlabs/33e129a4-b818-4563-932c-719ce49d138a" target="_blank" rel="noopener">Finance &amp; Strategy</a></h2>
+  <div class="meta">ElevenLabs &middot; United States &middot; ashby &middot; posted 3mo ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="270168b5" title="click to copy">270168b5</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1776830400" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5196219008" target="_blank" rel="noopener">Director, Infrastructure &amp; Energy Accounting</a></h2>
+  <div class="meta">Anthropic &middot; San Francisco, CA | Seattle, WA &middot; greenhouse &middot; posted 4mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="be255435" title="click to copy">be255435</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1776139200" data-found="1787457600" data-score="">
+  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8501026002" target="_blank" rel="noopener">Head of EMEA Financial Services GTM</a></h2>
+  <div class="meta">Databricks &middot; London, United Kingdom &middot; greenhouse &middot; posted 4mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="5751fb99" title="click to copy">5751fb99</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1775793600" data-found="1787457600" data-score="">
+  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8442976002" target="_blank" rel="noopener">Delivery Solutions Architect - Financial Services</a></h2>
+  <div class="meta">Databricks &middot; Georgia; Illinois; Massachusetts; New York; North Carolina; Washington, D.C. &middot; greenhouse &middot; posted 4mo ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="f5d1eb10" title="click to copy">f5d1eb10</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1775793600" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5184585008" target="_blank" rel="noopener">Data Science, Finance &amp; Strategy</a></h2>
+  <div class="meta">Anthropic &middot; San Francisco, CA &middot; greenhouse &middot; posted 4mo ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="5f0dfd13" title="click to copy">5f0dfd13</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1775534400" data-found="1787457600" data-score="">
+  <h2><a href="https://coreweave.com/careers/job?4666800006&amp;board=coreweave&amp;gh_jid=4666800006" target="_blank" rel="noopener">Manager, Data Center Operations Accounting</a></h2>
+  <div class="meta">CoreWeave &middot; Dallas, TX &middot; greenhouse &middot; posted 4mo ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="25678724" title="click to copy">25678724</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1774584000" data-found="1787457600" data-score="">
+  <h2><a href="https://careers.nebius.com/?gh_jid=4823935101" target="_blank" rel="noopener">Corporate Development Associate</a></h2>
+  <div class="meta">Nebius &middot; London, United Kingdom &middot; greenhouse &middot; posted 4mo ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="01bfeeda" title="click to copy">01bfeeda</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1773892800" data-found="1787457600" data-score="">
+  <h2><a href="https://coreweave.com/careers/job?4661606006&amp;board=coreweave&amp;gh_jid=4661606006" target="_blank" rel="noopener">Senior Manager, Operations Accounting Data Center Infrastructure</a></h2>
+  <div class="meta">CoreWeave &middot; Dallas, TX &middot; greenhouse &middot; posted 5mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="51807d2f" title="click to copy">51807d2f</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1772773200" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/scaleai/jobs/4663533005" target="_blank" rel="noopener">Senior Accountant</a></h2>
+  <div class="meta">Scale AI &middot; San Francisco, CA &middot; greenhouse &middot; posted 5mo ago</div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="7832ffdc" title="click to copy">7832ffdc</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1772773200" data-found="1787457600" data-score="">
+  <h2><a href="https://coreweave.com/careers/job?4660868006&amp;board=coreweave&amp;gh_jid=4660868006" target="_blank" rel="noopener">Corporate Development Associate</a></h2>
+  <div class="meta">CoreWeave &middot; Livingston, NJ / New York, NY / Sunnyvale, CA / Bellevue, WA &middot; greenhouse &middot; posted 5mo ago</div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="9ef0f5f0" title="click to copy">9ef0f5f0</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1771909200" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/modal/5ac02bd3-a7ac-4e3d-b9c2-cc1abede0ae3" target="_blank" rel="noopener">VP, Finance</a></h2>
+  <div class="meta">Modal &middot; New York &middot; ashby &middot; <span class="stale">posted 6mo ago</span></div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="184026f8" title="click to copy">184026f8</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1771477200" data-found="1787457600" data-score="">
+  <h2><a href="https://coreweave.com/careers/job?4655467006&amp;board=coreweave&amp;gh_jid=4655467006" target="_blank" rel="noopener">Director, Operations Accounting Enablement - Fixed Assets</a></h2>
+  <div class="meta">CoreWeave &middot; Dallas, TX &middot; greenhouse &middot; <span class="stale">posted 6mo ago</span></div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="898fcddb" title="click to copy">898fcddb</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1771304400" data-found="1787457600" data-score="">
+  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8414474002" target="_blank" rel="noopener">Senior Financial Analyst</a></h2>
+  <div class="meta">Databricks &middot; Bellevue, Washington; Mountain View, California; San Francisco, California; Seattle, Washington &middot; greenhouse &middot; <span class="stale">posted 6mo ago</span></div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="81128046" title="click to copy">81128046</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1770872400" data-found="1787457600" data-score="">
+  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8415095002" target="_blank" rel="noopener">Director, Finance PMO, Strategy &amp; Operations, FP&amp;A</a></h2>
+  <div class="meta">Databricks &middot; Bellevue, Washington; Denver, Colorado; Mountain View, California; San Francisco, California; Seattle, Washington &middot; greenhouse &middot; <span class="stale">posted 6mo ago</span></div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="3e49f70d" title="click to copy">3e49f70d</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1769662800" data-found="1787457600" data-score="">
+  <h2><a href="https://jobs.ashbyhq.com/modal/225b43d8-ef14-4082-b16e-005c74b42957" target="_blank" rel="noopener">Business Operations Manager</a></h2>
+  <div class="meta">Modal &middot; New York &middot; ashby &middot; <span class="stale">posted 6mo ago</span></div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="d86d03cc" title="click to copy">d86d03cc</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1768971600" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5079133008" target="_blank" rel="noopener">Finance &amp; Strategy, GTM - Korea</a></h2>
+  <div class="meta">Anthropic &middot; Seoul, South Korea &middot; greenhouse &middot; <span class="stale">posted 7mo ago</span></div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="da6a9bd9" title="click to copy">da6a9bd9</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1768798800" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/5076754008" target="_blank" rel="noopener">Director, Revenue Accounting</a></h2>
+  <div class="meta">Anthropic &middot; San Francisco, CA | Seattle, WA &middot; greenhouse &middot; <span class="stale">posted 7mo ago</span></div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="30766477" title="click to copy">30766477</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1766984400" data-found="1787457600" data-score="">
+  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8337425002" target="_blank" rel="noopener">Manager, International Statutory &amp; Technical Accounting</a></h2>
+  <div class="meta">Databricks &middot; London, United Kingdom &middot; greenhouse &middot; <span class="stale">posted 7mo ago</span></div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="ee5aa21e" title="click to copy">ee5aa21e</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1763442000" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/anthropic/jobs/4991194008" target="_blank" rel="noopener">Senior Business Systems Analyst, Finance Systems</a></h2>
+  <div class="meta">Anthropic &middot; San Francisco, CA | Seattle, WA &middot; greenhouse &middot; <span class="stale">posted 9mo ago</span></div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="f9cc700c" title="click to copy">f9cc700c</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1760673600" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/scaleai/jobs/4613327005" target="_blank" rel="noopener">Finance Fellow - Human Frontier Collective (UK)</a></h2>
+  <div class="meta">Scale AI &middot; United Kingdom &middot; greenhouse &middot; <span class="stale">posted 10mo ago</span></div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="766f9f3c" title="click to copy">766f9f3c</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1759377600" data-found="1787457600" data-score="">
+  <h2><a href="https://databricks.com/company/careers/open-positions/job?gh_jid=8182383002" target="_blank" rel="noopener">Finance Manager</a></h2>
+  <div class="meta">Databricks &middot; Mountain View, California; San Francisco, California &middot; greenhouse &middot; <span class="stale">posted 10mo ago</span></div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="2114465d" title="click to copy">2114465d</span></div>
+</article>
+<article class="job stretch" data-status="new" data-posted="1758600000" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/scaleai/jobs/4611776005" target="_blank" rel="noopener">Senior AI Product Manager, Finance Agents</a></h2>
+  <div class="meta">Scale AI &middot; San Francisco, CA; New York, NY &middot; greenhouse &middot; <span class="stale">posted 11mo ago</span></div>
+  <div class="row"><span class="badge warm">worth a look</span><span class="badge">New</span><span class="ref" data-ref="5636c3da" title="click to copy">5636c3da</span></div>
+</article>
+<article class="job" data-status="new" data-posted="1747454400" data-found="1787457600" data-score="">
+  <h2><a href="https://job-boards.greenhouse.io/scaleai/jobs/4565836005" target="_blank" rel="noopener">Finance Fellow - Human Frontier Collective (US)</a></h2>
+  <div class="meta">Scale AI &middot; United States &middot; greenhouse &middot; <span class="stale">posted 15mo ago</span></div>
+  <div class="row"><span class="badge">New</span><span class="ref" data-ref="0b83a7b9" title="click to copy">0b83a7b9</span></div>
+</article>
+  </div>
   <div class="empty" id="empty" style="display:none">Nothing in this category.</div>
   <footer>
     Change a status with the short reference:
     <code>py mark.py &lt;ref&gt; applied</code> &mdash; click a reference to copy it.
     Valid statuses: new, seen, applied, dismissed.
+    Roles open 6 months or more are flagged in red: usually evergreen reqs
+    rather than live openings.
   </footer>
 </div>
 <script>
+const list = document.getElementById('list');
 const tabs = document.querySelectorAll('.tab');
-const jobs = document.querySelectorAll('.job');
-function apply(filter) {
+const sortSel = document.getElementById('sort');
+let filter = 'new';
+
+function num(el, key, fallback) {
+  const v = el.dataset[key];
+  return (v === undefined || v === '') ? fallback : Number(v);
+}
+
+function render() {
   tabs.forEach(t => t.setAttribute('aria-selected', String(t.dataset.filter === filter)));
+  const jobs = Array.from(list.children);
+  const mode = sortSel.value;
+  jobs.sort((a, b) => {
+    if (mode === 'score') return num(b, 'score', -1) - num(a, 'score', -1);
+    if (mode === 'found') return num(b, 'found', 0) - num(a, 'found', 0);
+    if (mode === 'oldest') return num(a, 'posted', 9e15) - num(b, 'posted', 9e15);
+    return num(b, 'posted', -1) - num(a, 'posted', -1);   // newest posted
+  });
   let shown = 0;
   jobs.forEach(j => {
     const match = filter === 'all' || j.dataset.status === filter;
     j.style.display = match ? '' : 'none';
     if (match) shown++;
+    list.appendChild(j);
   });
   document.getElementById('empty').style.display = shown ? 'none' : '';
 }
-tabs.forEach(t => t.addEventListener('click', () => apply(t.dataset.filter)));
+
+tabs.forEach(t => t.addEventListener('click', () => { filter = t.dataset.filter; render(); }));
+sortSel.addEventListener('change', render);
 document.querySelectorAll('.ref').forEach(r => r.addEventListener('click', () => {
   navigator.clipboard && navigator.clipboard.writeText(r.dataset.ref);
   const original = r.textContent; r.textContent = 'copied';
   setTimeout(() => { r.textContent = original; }, 900);
 }));
-apply('new');
+render();
 </script>
 </body>
 </html>

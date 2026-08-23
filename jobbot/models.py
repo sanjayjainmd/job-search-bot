@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import hashlib
 import re
+from datetime import datetime, timezone
 from dataclasses import dataclass, field
 from typing import Optional
 
@@ -37,6 +38,7 @@ class Job:
     score: Optional[int] = None
     fit: Optional[str] = None
     seniority: Optional[str] = None
+    posted_at: Optional[str] = None
     reason: Optional[str] = None
     hook: Optional[str] = None
     meta: dict = field(default_factory=dict)
@@ -60,3 +62,27 @@ class Job:
 
     def is_valid(self) -> bool:
         return bool(self.title and self.company and self.url)
+
+
+def normalise_date(value) -> Optional[str]:
+    """Return YYYY-MM-DD from an ISO string or epoch-milliseconds, else None.
+
+    Greenhouse gives ISO with an offset, Ashby ISO in UTC, Lever epoch ms,
+    jobspy a date object. All three matter, so accept all three.
+    """
+    if value in (None, "", "nan"):
+        return None
+    if isinstance(value, (int, float)):
+        seconds = float(value) / 1000.0 if float(value) > 1e11 else float(value)
+        try:
+            return datetime.fromtimestamp(seconds, timezone.utc).date().isoformat()
+        except (OverflowError, OSError, ValueError):
+            return None
+    text = str(value).strip()
+    if not text:
+        return None
+    try:
+        return datetime.fromisoformat(text.replace("Z", "+00:00")).date().isoformat()
+    except ValueError:
+        pass
+    return text[:10] if re.fullmatch(r"\d{4}-\d{2}-\d{2}.*", text) else None

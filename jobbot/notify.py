@@ -56,7 +56,8 @@ def _job_html(job: Job) -> str:
         lines.append(f"\U0001F3AF {_esc(_detail_line(job))} - {_esc(job.reason or '')}")
     if job.hook:
         lines.append(f"✉️ <i>{_esc(job.hook)}</i>")
-    lines.append(f"<i>{_esc(job.source)}</i>")
+    tail = job.source + (f" | posted {job.posted_at}" if job.posted_at else "")
+    lines.append(f"<i>{_esc(tail)}</i>")
     return "\n".join(lines)
 
 
@@ -69,6 +70,8 @@ def _job_text(job: Job) -> str:
     if job.hook:
         lines.append(f"  Hook    : {job.hook}")
     lines.append(f"  Source  : {job.source}")
+    if job.posted_at:
+        lines.append(f"  Posted  : {job.posted_at}")
     lines.append(f"  Link    : {job.url}")
     return "\n".join(lines)
 
