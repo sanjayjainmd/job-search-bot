@@ -103,3 +103,30 @@ companies:
   - { name: "Encord", ats: ashby, slug: encord }  # 31 roles
   - { name: "Vapi", ats: ashby, slug: vapi }  # 31 roles
   - { name: "Composio", ats: ashby, slug: composio }  # 32 roles
+
+  # --- discovered from newsletters, 2026-11-14 ---
+  - { name: "Hightouch", ats: ashby, slug: hightouch }  # 1 roles
+  - { name: "Eventual", ats: ashby, slug: eventual }  # 4 roles
+  - { name: "Verse", ats: greenhouse, slug: verse }  # 8 roles
+  - { name: "AgentMail", ats: ashby, slug: agentmail }  # 9 roles
+  - { name: "Wafer", ats: ashby, slug: wafer }  # 10 roles
+  - { name: "Warp Sciences", ats: ashby, slug: warp-sciences }  # 11 roles
+  - { name: "Gumloop", ats: ashby, slug: gumloop }  # 12 roles
+  - { name: "Axion", ats: ashby, slug: axion }  # 14 roles
+  - { name: "Runlayer", ats: ashby, slug: runlayer }  # 15 roles
+  - { name: "Greptile", ats: ashby, slug: greptile }  # 16 roles
+  - { name: "Mirendil", ats: ashby, slug: mirendil }  # 16 roles
+  - { name: "David AI", ats: ashby, slug: david-ai }  # 19 roles
+  - { name: "Oratomic", ats: ashby, slug: oratomic }  # 19 roles
+  - { name: "Typesafe AI", ats: ashby, slug: typesafe-ai }  # 22 roles
+  - { name: "Watney", ats: ashby, slug: watney }  # 25 roles
+  - { name: "Discord", ats: greenhouse, slug: discord }  # 26 roles
+  - { name: "Conduct", ats: ashby, slug: conduct }  # 30 roles
+  - { name: "Linear", ats: ashby, slug: linear }  # 33 roles
+  - { name: "LiveKit", ats: ashby, slug: livekit }  # 33 roles
+  - { name: "Crux", ats: ashby, slug: crux }  # 36 roles
+  - { name: "Netic", ats: ashby, slug: netic }  # 36 roles
+  - { name: "LaunchDarkly", ats: greenhouse, slug: launchdarkly }  # 38 roles
+  - { name: "Reducto", ats: ashby, slug: reducto }  # 38 roles
+  - { name: "Hud", ats: ashby, slug: hud }  # 39 roles
+  - { name: "Roboflow", ats: ashby, slug: roboflow }  # 39 roles
